@@ -6,3 +6,5 @@ Saving automatic the actually coin list to local file system, to delete:    <br>
 -Set filesystem to view all data in settings   <br>
 -Goto c:\Users\USERNAME\AppData\Local\Microsoft\Internet Explorer\DOMStore\    <br>
 -Search "coins%20project[1].xml" and delete, restart done
+ <br> <br> <br>
+ In release is an .exe version for Windows
