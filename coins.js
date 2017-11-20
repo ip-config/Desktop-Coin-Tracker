@@ -43,7 +43,7 @@ if (localStorage.coin == undefined){
     }
   }
 
-  httpGet("https://api.coinmarketcap.com/v1/ticker/")
+  httpGet("https://api.coinmarketcap.com/v1/ticker/?limit=0")
 for (let i=0; i<data.length; i++){
   cmc[i] = (data[i].id);
   sym[i] = (data[i].symbol)
