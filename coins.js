@@ -179,14 +179,14 @@ let u = low(coin[o])
 erg[o] = (amm[o]*coinp[o])-(amm[o]*kamm[o])
 
 if (isNaN(erg[o]) || erg[o]==0){
-  tableq = "<table class=tt><thead><td class=tt><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg></a><img class=bil1 src="+bil+" /><br><span id="+coin[o]+"p></span></td></thead><tbody></tbody></table>";
+  tableq = "<table class=tt><thead><td class=tt><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg></a><img class=bil1 src="+bil+" /><br><a>"+btcprice[o]+" BTC</a><span id="+coin[o]+"p></span></td></thead><tbody></tbody></table>";
 
 }else{
 
   erg[o] = Math.round(erg[o]*100)/100
 
 
-tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><br><a id="+coin[o]+"erg>"+erg[o]+wahr+"</a><span id="+coin[o]+"p></span></td></thead><tbody></tbody></table>";
+tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg>  "+erg[o]+wahr+"</a><br><a>"+btcprice[o]+" BTC</a><span id="+coin[o]+"p> </span></td></thead><tbody></tbody></table>";
 }
 
 
