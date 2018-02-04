@@ -1,4 +1,5 @@
 let coin = [];
+let coin1h = [];
 let coinm = [];
 let coinh = [];
 let coind = [];
@@ -6,15 +7,20 @@ let coinr = [];
 let coinp = [];
 let coins = [];
 let cmc = [];
-let wahr
-let wa
+let wahr;
+let wa;
 let amm = [];
 let kamm = [];
 let erg = [];
-let view
-let sym = []
-let all = []
-let fla
+let view;
+let sym = [];
+let all = [];
+let fla;
+let btcprice = [];
+let btca = [];
+let btcb = [];
+let btcbb= [];
+let alarm = [];
 
 function first(){
 
@@ -43,6 +49,17 @@ if (localStorage.coin == undefined){
     }
   }
 
+  if (localStorage.alarml == undefined){
+
+    for (let i = 0; i<coin.length;i++){
+      alarm.push(0)
+
+    }}else{
+      alarm = JSON.parse(localStorage.alarml)
+
+    }
+
+
   httpGet("https://api.coinmarketcap.com/v1/ticker/?limit=0")
 for (let i=0; i<data.length; i++){
   cmc[i] = (data[i].id);
@@ -65,7 +82,7 @@ for (let i=0; i<data.length; i++){
 
               }
 
-            }
+            };
 
 
 function druck(){
@@ -86,10 +103,12 @@ alert("Coin already exist!")
 settings.style.display = 'block';
 slim2.style.display = 'none';
 stan.style.display = 'none';
+startTimer(3600)
 }
 
 
 function load(){
+
 
   document.getElementById("wahrung").value = wa
   document.getElementById(wa).checked = true
@@ -115,10 +134,10 @@ function load(){
   document.getElementById("small").checked = true
   }
 }
-let  grund = "<table class=tg id=slim><tr class=tg-baqh><td class=tg-j2zy>Coin</td><td class=tg-j2zy>Price "+wahr+"</td><td class=tg-j2zy>24H %</td><td class=tg-j2zy>7D %</td><td class=tg-j2zy>Market"+wahr+"</td><td class=tg-j2zy>Cap"+wahr+"</td></tr></table>"
+let  grund = "<table class=tg id=slim><tr class=tg-baqh><td class=tg-j2zy>Coin</td><td class=tg-j2zy>Price "+wahr+"</td><td class=tg-j2zy>Price BTC</td><td class=tg-j2zy>1H</td><td class=tg-j2zy>24H</td><td class=tg-j2zy>7D</td><td class=tg-j2zy>Market"+wahr+"</td><td class=tg-j2zy>Cap"+wahr+"</td></tr></table>"
       document.getElementById("slim2").innerHTML = grund
 
-let grund2 = "<table class=tg id=grt><tr class=tg-baqh><td class=tg-j2zy class=unt>Coin</td> <td class=tg-j2zy class=tab>Amount</td> <td class=tg-j2zy class=tab>Price @ Buy</td></tr></table>"
+let grund2 = "<table class=tg id=grt><tr class=tg-baqh><td class=tg-j2zy class=unt>Coin</td> <td class=tg-j2zy class=tab>Amount</td> <td class=tg-j2zy class=tab>Price @ Buy</td><td class=tg-j2zy class=tab>Alert&#x1f514;(act. Price)</td></tr></table>"
 document.getElementById("newe").innerHTML = grund2
 
 httpGet("https://api.coinmarketcap.com/v1/global/?convert="+wa)
@@ -142,6 +161,8 @@ let u = low(coin[o])
 
   httpGet("https://api.coinmarketcap.com/v1/ticker/"+u+"/?convert="+wa)
 
+    btcprice[o] = (data[0]["price_btc"])
+    coin1h[o] = (data[0]["percent_change_1h"])
     coinp[o] = (data[0]["price_"+wa])
     coinr[o] = (" #"+data[0].rank)
     coind[o] = (data[0]["percent_change_7d"])
@@ -150,8 +171,6 @@ let u = low(coin[o])
     coins[o] = (data[0]["symbol"])
     bil = "http://files.coinmarketcap.com.s3-website-us-east-1.amazonaws.com/static/img/coins/200x200/"+u+".png"
     bil2 = "https://files.coinmarketcap.com/static/img/coins/16x16/"+u+".png"
-
-
 
 
 
@@ -183,6 +202,7 @@ tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><spa
       let mAll = coinm[o]
       let h = coinh[o]
       let d = coind[o]
+
       row = "<table class=tt><tbody><tr class=tt><td class=tt id="+coin[o]+"mAll>"+mAll+ "</td><td class=tt id="+coin[o]+"24h><a>24h<br>%</a><br>"+h+ "</td><td class=tt id="+coin[o]+"7d><a>7 Days<br>%</a><br>"+d+ "</td></tr></tbody></table>";
       if (eval(coinp[o])>1){
                po=(Math.round(coinp[o]*100)/100)
@@ -191,18 +211,36 @@ tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><spa
              }
     let tp = Math.round(coind[o])
     let sp = Math.round(coinh[o])
+    let hp = Math.round(coin1h[o])
+    let btc = btcprice[o]
+
+for (let i=0; i<btc.length; i++){
+
+if ((btc.charAt(i) == "1") || (btc.charAt(i) == "2")|| (btc.charAt(i) == "3")|| (btc.charAt(i) == "4")|| (btc.charAt(i) == "5")|| (btc.charAt(i) == "6")|| (btc.charAt(i) == "7")|| (btc.charAt(i) == "8")|| (btc.charAt(i) == "9")){
+
+
+btca.push(i)
+break
+}else {}
+}
+btcb.push(btcprice[o].slice(0, btca[o]))
+btcbb.push(btcprice[o].slice(btca[o], btcprice[o].lenght))
 
 if (isNaN(erg[o])){
   erg[o]= [0]
 }
-
+let ala =""
+if (alarm[o]==0){}else{
+  document.getElementById(coin[o]+"rang").innerHTML += "<a title=@"+alarm[o]+">&#x1f514;</a>"
+ ala = "<td title=@"+alarm[o]+">&#x1f514;</td>"
+}
 
 if (fla==true){
-     slim3 =   "<tr  class=tg-baqhtg><td class=tg-lqy6><img src="+bil2+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td></tr></table>"
+     slim3 =   "<tr  class=tg-baqhtg><td class=tg-lqy6><img src="+bil2+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"<a style= color:burlywood;font-size:18px;>"+btcbb[o]+"</a></td><td class=tg-lqy6 id="+coin[o]+"hp>"+hp+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td>"+ala
 fla = false
 
 }else{
-   slim3 =   "<tr class=tg-baqhtg style= background-color:black;><td class=tg-lqy6><img src="+bil2+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td></tr></table>"
+   slim3 =   "<tr class=tg-baqhtg style= background-color:black;><td class=tg-lqy6><img src="+bil2+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"<a style= color:burlywood;font-size:18px;>"+btcbb[o]+"</a></td><td class=tg-lqy6 id="+coin[o]+"hp>"+hp+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td>"+ala
 fla = true
 
 }
@@ -232,13 +270,27 @@ fla = true
 
      if (amm[o] ==  undefined){
 
-          roww =   "<tr><td class=unt><img src="+bil2+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value=0 ></input></td> <td class=unt><input type=number id=inprice"+o+" value=0></input></td><td ><button type=button  id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td></tr></table>"
+          roww =   "<tr><td class=unt><img src="+bil2+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value=0 ></input></td> <td class=unt><input type=number id=inprice"+o+" value=0></input></td><td class=unt><input type=number id=alert"+o+" value=0>("+po+")</input></td><td ><button type=button id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td><td><button type=button id=delbutton"+o+" onclick=del("+[o]+")>X</button></td></tr></table>"
 
       }
       else{
-          roww =   "<tr><td class=unt><img src="+bil2+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value="+amm[o]+" ></input></td> <td class=unt><input type=number id=inprice"+o+" value="+kamm[o]+"></input></td><td ><button type=button  id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td></tr></table>"
+          roww =   "<tr><td class=unt><img src="+bil2+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value="+amm[o]+" ></input></td> <td class=unt><input type=number id=inprice"+o+" value="+kamm[o]+"></input></td><td class=unt><input type=number id=alert"+o+" value="+alarm[o]+">("+po+")</input></td><td ><button type=button id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td><td><button type=button id=delbutton"+o+" onclick=del("+[o]+")>X</button></td></tr></table>"
  }
+
+
          document.getElementById("grt").innerHTML += roww;
+
+
+
+
+if (alarm[o]==0){}else{
+  if (alarm[o]<coinp[o]){
+    alert(coin[o]+" Alert!! Price over "+alarm[o])
+    alarm[o]=0
+
+  }
+}
+
 
   startTimer(180);
       }
@@ -252,7 +304,7 @@ localsave()
 }
 
 function set(){
-
+startTimer(3600)
   settings.style.display = 'block';
   slim2.style.display = 'none';
   stan.style.display = 'none';
@@ -270,6 +322,7 @@ if (za==0){}else{
 coin.swapItems(za, za-1)
 amm.swapItems(za, za-1)
 kamm.swapItems(za, za-1)
+alarm.swapItems(za, za-1)
 load()
 set()
 
@@ -282,6 +335,7 @@ if (za==coin.length-1){}else{
 coin.swapItems(za, za+1)
 amm.swapItems(za, za+1)
 kamm.swapItems(za, za+1)
+alarm.swapItems(za, za+1)
 load()
 set()
 
@@ -291,27 +345,31 @@ set()
 
 
 function save(){
+
 amm = []
 kamm = []
 
   for (let i=0; i<coin.length; i++){
+
+
 let h = document.getElementById("inamm"+i).value
 let j = document.getElementById("inprice"+i).value
-
+let k = document.getElementById("alert"+i).value
 hn = h.replace(/,/g, '.')
 jn = j.replace(/,/g, '.')
+kn = k.replace(/,/g, '.')
 
 
-
+alarm[i]=kn
 amm.push(hn)
 kamm.push(jn)
 
-}
+};
 
 
 localStorage["kamm"] = JSON.stringify(kamm);
 localStorage["amm"] = JSON.stringify(amm);
-
+localStorage["alarml"] = JSON.stringify(alarm);
 waeh()
 load()
 location.reload()
@@ -352,25 +410,17 @@ function minute(secs){
     return "Update:&nbsp;"+minVar+":"+secs;
 }
 
-function del(){
-  let a = coin.length-1
-   let b = coin[a]
-
-  document.getElementById(b).innerHTML = ""
-
- coin.splice(a, 1);
- kamm.splice(a, 1)
- erg.splice(a, 1)
- amm.splice(a, 1)
-
-
-
- localsave()
- load()
- settings.style.display = 'block';
- slim2.style.display = 'none';
- stan.style.display = 'none';
-}
+function del(item){
+coin.splice(item,1)
+kamm.splice(item,1)
+amm.splice(item,1)
+alarm.splice(item,1)
+localsave()
+load()
+settings.style.display = 'block';
+slim2.style.display = 'none';
+stan.style.display = 'none';
+};
 
 
 
@@ -398,6 +448,8 @@ let cc = coin[i]+"erg"
 let  dd = coin[i]+"tp"
 let ee = coin[i]+"sp"
 let ff = coin[i]+"ergslim"
+let g = coin1h[i]
+let gg = coin[i]+"hp"
 
 if (eval(a)>0){
   document.getElementById(aa).style.color = 'green';
@@ -413,7 +465,7 @@ document.getElementById(ee).style.color = 'green'
 } else {
 document.getElementById(bb).style.color = 'red';
 document.getElementById(ee).style.color = 'red';
-}c
+}
 
 if (eval(c)>0){
 document.getElementById(cc).style.color = 'green';
@@ -422,7 +474,14 @@ document.getElementById(ff).style.color = 'green';
 document.getElementById(cc).style.color = 'red';
 document.getElementById(ff).style.color = 'red';
 }
+if (eval(g)>0){
+document.getElementById(gg).style.color = 'green';
+
+} else {
+document.getElementById(gg).style.color = 'red';
+
 }
+};
 
 
 function mill(x){
@@ -496,11 +555,11 @@ function localsave(){
   localStorage["wahr"] = JSON.stringify(wahr);
   localStorage["kamm"] = JSON.stringify(kamm);
   localStorage["amm"] = JSON.stringify(amm);
-
+localStorage["alarml"] = JSON.stringify(alarm);
 }
 
 
-let wert = ["eur", "usd", "btc"]
+let wert = ["eur", "usd"]
 
 function waeh(){
 for (let i=0; i<wert.length; i++){
