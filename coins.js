@@ -391,6 +391,7 @@ function tick() {
   } else {
     elem.innerHTML = "0";
     clearInterval(interval);
+
   }
 }
 
@@ -407,8 +408,13 @@ function minute(secs){
     if (secs < 10) {
         secs = "0"+secs;
     }
+    if (eval(minVar)==0 && eval(secs)==1){
+    load()
+    }
     return "Update:&nbsp;"+minVar+":"+secs;
 }
+
+
 
 function del(item){
 coin.splice(item,1)
@@ -420,6 +426,7 @@ load()
 settings.style.display = 'block';
 slim2.style.display = 'none';
 stan.style.display = 'none';
+
 };
 
 
