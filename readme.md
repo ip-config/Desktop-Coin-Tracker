@@ -1,5 +1,5 @@
  
-.exe in "releases"!
+.exe in "releases"! (Compiled with Electron)
 
 <br><br>
 <a>Source: coinmarketcap.com update every 5min<br>AutoRefresh every 3min<br><br>
