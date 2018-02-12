@@ -8,4 +8,10 @@ Pictures autoload from coinmarketcap, some coins have a dummy pic for some reaso
 -Add your personal buy prices for profit overview   <br>
 -Alerts for every coin    <br>
 ![alt text](https://fs.bitcoinmagazine.com/img/images/altcoins.width-800.jpg)
+ 
+ ![img](https://i.imgur.com/7upsQbo.jpg)
+
+![img](https://i.imgur.com/tDbzZrq.jpg)
+
+![img](https://i.imgur.com/hJcnZLd.jpg)
 
