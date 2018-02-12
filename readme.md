@@ -1,4 +1,6 @@
  
+.exe in "releases"
+
 <span>Readme</span><br><br>
 <a>Source: coinmarketcap.com update every 5min<br>AutoRefresh every 3min<br><br>
 Pictures autoload from coinmarketcap, some coins have a dummy pic for some reason<br><br>Bitcoin and Ethereum are set as standard list<br>
