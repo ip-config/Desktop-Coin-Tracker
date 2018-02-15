@@ -21,45 +21,204 @@ let btca = [];
 let btcb = [];
 let btcbb= [];
 let alarm = [];
+let firstview
+let coin1 = []
+let coin2 = []
+let coin3 = []
+let coin4 = []
+let wa1= []
+let wa2= []
+let wa3= []
+let wa4= []
+let amm1 = []
+let amm2 = []
+let amm3 = []
+let amm4 = []
+let kamm1 = []
+let kamm2 = []
+let kamm3 = []
+let kamm4 = []
+let alarm1 = []
+let alarm2 = []
+let alarm3 = []
+let alarm4 = []
+let view1 = []
+let view2 = []
+let view3= []
+let view4= []
+let setflag = false
+let fs = require('fs');
+
+function filler(){
+
+
+
+  let a = ["","amm", "kamm", "alarm"]
+  for (let i=1; i<4;i++){
+    d = eval("coin"+i)
+    for (let p=1; p<4;p++){
+let aa = eval("amm"+i)
+let bb = eval("kamm"+i)
+let cc = eval("alarm"+i)
+if (d.length>aa.length){
+  let f = d.length-aa.length
+  for (let o=0;o<f;o++){
+    aa[d.length-1] = "0"
+    }}
+    if (d.length>bb.length){
+      let f = d.length-bb.length
+      for (let o=0;o<f;o++){
+        bb[d.length-1] = "0"
+        }}
+        if (d.length>cc.length){
+          let f = d.length-cc.length
+          for (let o=0;o<f;o++){
+          cc[d.length-1] = "0"
+            }}
+
+    }
+
+
+
+}
+  }
+
+
+
+
+
 
 function first(){
 
-  if (localStorage.wa==undefined){
+ try {
+
+  let over = fs.readFileSync('config.json');
+
+  let loadjson = JSON.parse(over)
+ firstview = loadjson.First_View_Portfolio
+  let saved = ["","Portfolio1", "Portfolio2", "Portfolio3","Portfolio4"]
+
+  for (let i=1; i<=4;i++){
+
+let a = eval("coin"+i)
+ab = eval("loadjson."+saved[i]+".Coins")
+
+let b = eval("wa"+i)
+  bb = eval("loadjson."+saved[i]+".Fix_Currency")
+
+  b.push(bb.toString())
+
+
+let c = eval("amm"+i)
+  cc= eval("loadjson."+saved[i]+".Amount")
+
+
+
+let d = eval("kamm"+i)
+  dd = eval("loadjson."+saved[i]+".Price_Buy")
+
+
+
+  let e = eval("alarm"+i)
+ee  = eval("loadjson."+saved[i]+".Alarm")
+
+
+
+  let f = eval("view"+i)
+  ff = eval("loadjson."+saved[i]+".View")
+
+  f.push(ff.toString())
+
+
+
+
+
+
+for (let o=0; o<=eval("loadjson."+saved[i]+".Coins").length-1;o++){
+
+a.push(ab[o])
+  c.push(cc[o])
+  d.push(dd[o])
+  e.push(ee[o])
+
+}
+  }
+  wa = []
+  coin =[]
+  amm = []
+  kamm = []
+  alarm = []
+  view =  []
+  wa = eval("loadjson."+firstview+".Fix_Currency")
+  if (wa=="eur"){wahr = "€"}else{wahr="$"}
+  coin = eval("loadjson."+firstview+".Coins")
+  amm = eval("loadjson."+firstview+".Amount")
+  kamm = eval("loadjson."+firstview+".Price_Buy")
+  alarm  =eval("loadjson."+firstview+".Alarm")
+  view = eval("loadjson."+firstview+".View")
+console.log("File load complete")
+   }
+    catch(e) { console.log('Failed to load the file !')
     wahr = " €"
     wa = "eur"
-  }else{
-  wa = JSON.parse(localStorage.wa)
-  wahr = JSON.parse(localStorage.wahr)
-  document.getElementById("wahrung").value = wa
+    view = "big"
+    firstview = "Portfolio1"
+    coin = ["Bitcoin","Ethereum"]
+    document.getElementById(wa).checked = true
+    alarm= ["0","0"]
+    amm=["0","0"]
+    kamm=["0","0"]
+
+      let saved = ["","Portfolio1", "Portfolio2", "Portfolio3","Portfolio4"]
+
+      for (let i=1; i<=4;i++){
+
+    let a = eval("coin"+i)
+    ab = coin
+
+    let b = eval("wa"+i)
+      bb = wa
+      b.push(bb.toString())
+
+
+    let c = eval("amm"+i)
+      cc= amm
+
+
+
+    let d = eval("kamm"+i)
+      dd = kamm
+
+
+
+      let e = eval("alarm"+i)
+    ee  = alarm
+
+
+
+      let f = eval("view"+i)
+      ff = view
+
+      f.push(ff.toString())
+
+
+
+
+
+
+    for (let o=0; o<2;o++){
+
+    a.push(ab[o])
+      c.push(cc[o])
+      d.push(dd[o])
+      e.push(ee[o])
+
+    }
   }
-  document.getElementById(wa).checked = true
-
-
-if (localStorage.amm == undefined){}else{
-  amm = JSON.parse(localStorage.amm)
-kamm = JSON.parse(localStorage.kamm)
 }
 
-if (localStorage.coin == undefined){
-    coin.push("Bitcoin","Ethereum")
-  }else{
-    let z = JSON.parse(localStorage.coin)
-   for (let i=0; i<z.length; i++){
-      coin.push(z[i])
-    }
-  }
 
-  if (localStorage.alarml == undefined){
-
-    for (let i = 0; i<coin.length;i++){
-      alarm.push(0)
-
-    }}else{
-      alarm = JSON.parse(localStorage.alarml)
-
-    }
-
-
+document.getElementById("port").value = firstview
   httpGet("https://api.coinmarketcap.com/v1/ticker/?limit=0")
 for (let i=0; i<data.length; i++){
   cmc[i] = (data[i].id);
@@ -98,7 +257,13 @@ if (coin.indexOf(b)>=0){
 alert("Coin already exist!")
 }else{
  coin.push(b)
- load()
+
+ let d = firstview[9]
+ let e = eval("coin"+d)
+ e = b
+filler()
+ localsave()
+load()
 
 }
 settings.style.display = 'block';
@@ -109,32 +274,27 @@ startTimer(3600)
 
 
 function load(){
-
-
+  let a9 = firstview[9]
+  let b9 = eval("amm"+a9)
+  let c9 = eval("kamm"+a9)
+  amm = b9
+  kamm = c9
+document.getElementById("stan").innerHTML = ""
   document.getElementById("wahrung").value = wa
   document.getElementById(wa).checked = true
 
-  if (localStorage.view==undefined){
-    view="big"
-    settings.style.display = 'none';
-   slim2.style.display = 'none';
-  stan.style.display = 'block';
-  document.getElementById("big").checked = true
-  }else{
-    view = JSON.parse(localStorage.view)
-    if (view=="big"){
-      settings.style.display = 'none';
-     slim2.style.display = 'none';
-    stan.style.display = 'block';
-    document.getElementById("big").checked = true
-  }else{
-
+    if (view=="small"){
     settings.style.display = 'none';
     slim2.style.display = 'block';
     stan.style.display = 'none';
   document.getElementById("small").checked = true
-  }
+}else{
+  settings.style.display = 'none';
+ slim2.style.display = 'none';
+stan.style.display = 'block';
+document.getElementById("big").checked = true
 }
+
 let  grund = "<table class=tg id=slim><tr class=tg-baqh><td class=tg-j2zy>Coin</td><td class=tg-j2zy>Price "+wahr+"</td><td class=tg-j2zy>Price BTC</td><td class=tg-j2zy>1H</td><td class=tg-j2zy>24H</td><td class=tg-j2zy>7D</td><td class=tg-j2zy>Market"+wahr+"</td><td class=tg-j2zy>Cap"+wahr+"</td></tr></table>"
       document.getElementById("slim2").innerHTML = grund
 
@@ -154,7 +314,10 @@ httpGet("https://api.coinmarketcap.com/v1/global/?convert="+wa)
 
 
   for (let o = 0; o<coin.length; o++){
+
+
     rahmen = document.createElement("div")
+
   rahmen.innerHTML = "<div id="+coin[o]+" class=tt></div></div>"
   document.getElementById("stan").appendChild(rahmen)
 
@@ -295,7 +458,7 @@ if (alarm[o]==0){}else{
 }
 
 
-  startTimer(180);
+  startTimer(179);
       }
 
 
@@ -303,11 +466,12 @@ if (alarm[o]==0){}else{
 
 
 localsave()
-
+erg = []
 }
 
 function set(){
 startTimer(3600)
+setflag = true
   settings.style.display = 'block';
   slim2.style.display = 'none';
   stan.style.display = 'none';
@@ -346,38 +510,6 @@ set()
 }
 
 
-
-function save(){
-
-amm = []
-kamm = []
-
-  for (let i=0; i<coin.length; i++){
-
-
-let h = document.getElementById("inamm"+i).value
-let j = document.getElementById("inprice"+i).value
-let k = document.getElementById("alert"+i).value
-hn = h.replace(/,/g, '.')
-jn = j.replace(/,/g, '.')
-kn = k.replace(/,/g, '.')
-
-
-alarm[i]=kn
-amm.push(hn)
-kamm.push(jn)
-
-};
-
-
-localStorage["kamm"] = JSON.stringify(kamm);
-localStorage["amm"] = JSON.stringify(amm);
-localStorage["alarml"] = JSON.stringify(alarm);
-waeh()
-load()
-location.reload()
-
-}
 
 var startTime, countAmt, interval;
 
@@ -557,16 +689,117 @@ function low(string) {
     return string.substring(0, 1).toLowerCase() + string.substring(1);
 }
 
+function save(){
+setflag = false
+amm = []
+kamm = []
+
+  for (let i=0; i<coin.length; i++){
+
+
+let h = document.getElementById("inamm"+i).value
+let j = document.getElementById("inprice"+i).value
+let k = document.getElementById("alert"+i).value
+hn = h.replace(/,/g, '.')
+jn = j.replace(/,/g, '.')
+kn = k.replace(/,/g, '.')
+
+let a = firstview[9]
+let b = eval("amm"+a)
+let c = eval("kamm"+a)
+alarm[i]=kn
+b[i]=hn
+c[i]=jn
+
+
+};
+
+waeh()
+
+localsave()
+load()
+
+
+}
+
+function portf(){
+
+
+
+  firstview = document.getElementById("port").value
+  document.getElementById("stan").innerHTML = ""
+  let a = firstview[9]
+  coin = []
+  coin = eval("coin"+a)
+  wa = []
+  wa = eval("wa"+a)
+  amm = []
+  amm = eval("amm"+a)
+  kamm = []
+  kamm = eval("kamm"+a)
+  alarm = []
+  alarm = eval("alarm"+a)
+  view = []
+  view = eval("view"+a)
+  if (wa=="eur"){
+     wahr = " €"
+  }
+  if (wa=="usd"){
+    wahr = " $"
+  }
+
+localsave()
+  load()
+if (setflag==true) {
+  settings.style.display = 'block';
+  slim2.style.display = 'none';
+  stan.style.display = 'none';
+}
+
+}
 
 function localsave(){
+  const obj = {
+"Portfolio1": {},
+"Portfolio2": {},
+"Portfolio3": {},
+"Portfolio4": {}
+  };
 
-  localStorage["coin"] = JSON.stringify(coin);
-  localStorage["wa"] = JSON.stringify(wa);
-  localStorage["wahr"] = JSON.stringify(wahr);
-  localStorage["kamm"] = JSON.stringify(kamm);
-  localStorage["amm"] = JSON.stringify(amm);
-localStorage["alarml"] = JSON.stringify(alarm);
-}
+     obj["First_View_Portfolio"] = firstview
+        obj["Portfolio1"]["Coins"] = coin1;
+        obj["Portfolio1"]["Fix_Currency"] = wa1;
+        obj["Portfolio1"]["Amount"] = amm1;
+        obj["Portfolio1"]["Price_Buy"] = kamm1;
+        obj["Portfolio1"]["Alarm"] = alarm1;
+
+        obj["Portfolio1"]["View"] = view1;
+
+        obj["Portfolio2"]["Coins"] = coin2;
+        obj["Portfolio2"]["Fix_Currency"] = wa2;
+        obj["Portfolio2"]["Amount"] = amm2;
+        obj["Portfolio2"]["Price_Buy"] = kamm2;
+        obj["Portfolio2"]["Alarm"] = alarm2;
+        obj["Portfolio2"]["View"] = view2;
+
+        obj["Portfolio3"]["Coins"] = coin3;
+        obj["Portfolio3"]["Fix_Currency"] = wa3;
+        obj["Portfolio3"]["Amount"] = amm3;
+        obj["Portfolio3"]["Price_Buy"] = kamm3;
+        obj["Portfolio3"]["Alarm"] = alarm3;
+        obj["Portfolio3"]["View"] = view3;
+
+        obj["Portfolio4"]["Coins"] = coin4;
+        obj["Portfolio4"]["Fix_Currency"] = wa4;
+        obj["Portfolio4"]["Amount"] = amm4;
+        obj["Portfolio4"]["Price_Buy"] = kamm4;
+        obj["Portfolio4"]["Alarm"] = alarm4;
+        obj["Portfolio4"]["View"] = view4;
+
+
+try { fs.writeFileSync('config.json',JSON.stringify(obj, null, 4), 'utf-8'); }
+catch(e) { console.log('Failed to save the file !'); }
+};
 
 
 let wert = ["eur", "usd"]
@@ -575,30 +808,41 @@ function waeh(){
 for (let i=0; i<wert.length; i++){
   if (document.getElementById(wert[i]).checked){
     wa = wert[i]
+    let a = firstview[9]
+    let b = eval("wa"+a)
+
+    b[0] = []
+    b[0] = wa
+
+
+
   }
-}
-
-
+};
   if (document.getElementById("big").checked){
     settings.style.display = 'none';
     stan.style.display = 'block';
     slim2.style.display = 'none';
     view="big"
+    let a = firstview[9]
+    let b = eval("view"+a)
+
+    b[0] = []
+    b[0] = view
   }else{
     settings.style.display = 'none';
     stan.style.display = 'none';
     slim2.style.display = 'block';
     view="small"
-  }
-  localStorage["view"] = JSON.stringify(view);
+    let a = firstview[9]
+    let b = eval("view"+a)
 
+    b[0] = []
+    b[0] = view
+  };
 if (wa=="eur"){
    wahr = " €"
 }
 if (wa=="usd"){
   wahr = " $"
 }
-if (wa=="btc"){
-  wahr = " BTC"
-}
-}
+};

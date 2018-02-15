@@ -1,3 +1,6 @@
+
+
+
 <!doctype html>
 <html lang="de">
 <head>
@@ -116,7 +119,12 @@ input{
   <a id="alles" style="float: right;"></a>
 
   <a  style="float: right;">Cap:&nbsp; </a>
-
+  <select id="port" name="port" style="float: right;" onchange="portf()">
+   <option value = "Portfolio1">Portfolio1</option>
+  <option value = "Portfolio2">Portfolio2</option>
+  <option value = "Portfolio3">Portfolio3</option>
+  <option value = "Portfolio4">Portfolio4</option>
+  </select>
   <button type="button"  id="set" onclick="set()">Settings</button><a>&nbsp;</a>
 
 <div id="slim2">
@@ -126,8 +134,9 @@ input{
 
 </div>
 
-<div id="settings">
 
+
+<div id="settings" style="float: left;">
 
 
 
@@ -140,6 +149,7 @@ input{
 
         <select id="liste" name="liste"> </select>
         <button type="button" id="knopf" onclick="druck()">Add</button>
+
 
 
 
