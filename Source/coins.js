@@ -260,7 +260,9 @@ alert("Coin already exist!")
 
  let d = firstview[9]
  let e = eval("coin"+d)
- e = b
+ if (e.indexOf(b)>=0){}else{
+ e.push(b)
+}
 filler()
  localsave()
 load()
@@ -295,7 +297,7 @@ stan.style.display = 'block';
 document.getElementById("big").checked = true
 }
 
-let  grund = "<table class=tg id=slim><tr class=tg-baqh><td class=tg-j2zy>Coin</td><td class=tg-j2zy>Price "+wahr+"</td><td class=tg-j2zy>Price BTC</td><td class=tg-j2zy>1H</td><td class=tg-j2zy>24H</td><td class=tg-j2zy>7D</td><td class=tg-j2zy>Market"+wahr+"</td><td class=tg-j2zy>Cap"+wahr+"</td></tr></table>"
+let  grund = "<table class=tg id=slim><tr class=tg-baqh><td class=tg-j2zy>Coin</td><td class=tg-j2zy>Price "+wahr+"</td><td class=tg-j2zy>Price BTC</td><td class=tg-j2zy>1H</td><td class=tg-j2zy>24H</td><td class=tg-j2zy>7D</td><td class=tg-j2zy>Market "+wahr+"</td><td class=tg-j2zy>Cap "+wahr+"</td></tr></table>"
       document.getElementById("slim2").innerHTML = grund
 
 let grund2 = "<table class=tg id=grt><tr class=tg-baqh><td class=tg-j2zy class=unt>Coin</td> <td class=tg-j2zy class=tab>Amount</td> <td class=tg-j2zy class=tab>Price @ Buy</td><td class=tg-j2zy class=tab>Alert&#x1f514;(act. Price)</td></tr></table>"
@@ -333,8 +335,8 @@ let u = low(coin[o])
     coinh[o] = (data[0]["percent_change_24h"])
     coinm[o] = (Math.round(data[0]["market_cap_"+wa]))
     coins[o] = (data[0]["symbol"])
-    bil = "http://files.coinmarketcap.com.s3-website-us-east-1.amazonaws.com/static/img/coins/200x200/"+u+".png"
-    bil2 = "https://files.coinmarketcap.com/static/img/coins/16x16/"+u+".png"
+    bil = "https://coincheckup.com/images/coins/"+u+".png"
+
 
 
 
@@ -401,11 +403,11 @@ if (alarm[o]==0){}else{
 }
 
 if (fla==true){
-     slim3 =   "<tr  class=tg-baqhtg><td class=tg-lqy6><img src="+bil2+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"<a style= color:burlywood;font-size:18px;>"+btcbb[o]+"</a></td><td class=tg-lqy6 id="+coin[o]+"hp>"+hp+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td>"+ala
+     slim3 =   "<tr  class=tg-baqhtg><td class=tg-lqy6><img src="+bil+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"<a style= color:burlywood;font-size:18px;>"+btcbb[o]+"</a></td><td class=tg-lqy6 id="+coin[o]+"hp>"+hp+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td>"+ala
 fla = false
 
 }else{
-   slim3 =   "<tr class=tg-baqhtg style= background-color:black;><td class=tg-lqy6><img src="+bil2+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"<a style= color:burlywood;font-size:18px;>"+btcbb[o]+"</a></td><td class=tg-lqy6 id="+coin[o]+"hp>"+hp+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td>"+ala
+   slim3 =   "<tr class=tg-baqhtg style= background-color:black;><td class=tg-lqy6><img src="+bil+" width=16px height=16px></img>&nbsp;"+coins[o]+"</td><td class=tg-lqy6 style= color:orange;font-size:18px;>"+po+"</td><td class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"<a style= color:burlywood;font-size:18px;>"+btcbb[o]+"</a></td><td class=tg-lqy6 id="+coin[o]+"hp>"+hp+"</td><td class=tg-lqy6 id="+coin[o]+"sp>"+sp+"</td><td class=tg-lqy6 id="+coin[o]+"tp>"+tp+"</td><td class=tg-lqy6 id="+coin[o]+"mAll2>"+mAll+"</td><td class=tg-lqy6 id="+coin[o]+"ergslim>"+erg[o]+"</td>"+ala
 fla = true
 
 }
@@ -435,11 +437,11 @@ fla = true
 
      if (amm[o] ==  undefined){
 
-          roww =   "<tr><td class=unt><img src="+bil2+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value=0 ></input></td> <td class=unt><input type=number id=inprice"+o+" value=0></input></td><td class=unt><input type=number id=alert"+o+" value=0>("+po+")</input></td><td ><button type=button id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td><td><button type=button id=delbutton"+o+" onclick=del("+[o]+")>X</button></td></tr></table>"
+          roww =   "<tr><td class=unt><img src="+bil+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value=0 ></input></td> <td class=unt><input type=number id=inprice"+o+" value=0></input></td><td class=unt><input type=number id=alert"+o+" value=0>("+po+")</input></td><td ><button type=button id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td><td><button type=button id=delbutton"+o+" onclick=del("+[o]+")>X</button></td></tr></table>"
 
       }
       else{
-          roww =   "<tr><td class=unt><img src="+bil2+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value="+amm[o]+" ></input></td> <td class=unt><input type=number id=inprice"+o+" value="+kamm[o]+"></input></td><td class=unt><input type=number id=alert"+o+" value="+alarm[o]+">("+po+")</input></td><td ><button type=button id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td><td><button type=button id=delbutton"+o+" onclick=del("+[o]+")>X</button></td></tr></table>"
+          roww =   "<tr><td class=unt><img src="+bil+" width=16px height=16px></img>&nbsp"+coins[o]+"&nbsp;</td><td class=unt><input  type=number;  id=inamm"+o+"  value="+amm[o]+" ></input></td> <td class=unt><input type=number id=inprice"+o+" value="+kamm[o]+"></input></td><td class=unt><input type=number id=alert"+o+" value="+alarm[o]+">("+po+")</input></td><td ><button type=button id=plus value="+coin[o]+" onclick=hoch(value)>&#8593</button></td><td><button type=button value="+coin[o]+" id=minus onclick=runter(value)>&#8595</button></td><td><button type=button id=delbutton"+o+" onclick=del("+[o]+")>X</button></td></tr></table>"
  }
 
 
@@ -552,6 +554,7 @@ function minute(secs){
 
 
 function del(item){
+
 coin.splice(item,1)
 kamm.splice(item,1)
 amm.splice(item,1)
@@ -790,7 +793,7 @@ function localsave(){
         obj["Portfolio3"]["View"] = view3;
 
         obj["Portfolio4"]["Coins"] = coin4;
-        obj["Portfolio4"]["Fix_Currency"] = wa4;
+        obj["Portfolio4"]["Fix_Currency"] = wa4
         obj["Portfolio4"]["Amount"] = amm4;
         obj["Portfolio4"]["Price_Buy"] = kamm4;
         obj["Portfolio4"]["Alarm"] = alarm4;
