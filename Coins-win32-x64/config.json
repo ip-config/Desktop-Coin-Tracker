@@ -1,0 +1,99 @@
+{
+    "Portfolio1": {
+        "Coins": [
+            "Bitcoin",
+            "Ethereum"
+        ],
+        "Fix_Currency": [
+            "eur"
+        ],
+        "Amount": [
+            "0",
+            "0"
+        ],
+        "Price_Buy": [
+            "0",
+            "0"
+        ],
+        "Alarm": [
+            "0",
+            "0"
+        ],
+        "View": [
+            "big"
+        ]
+    },
+    "Portfolio2": {
+        "Coins": [
+            "Bitcoin",
+            "Ethereum"
+        ],
+        "Fix_Currency": [
+            "eur"
+        ],
+        "Amount": [
+            "0",
+            "0"
+        ],
+        "Price_Buy": [
+            "0",
+            "0"
+        ],
+        "Alarm": [
+            "0",
+            "0"
+        ],
+        "View": [
+            "big"
+        ]
+    },
+    "Portfolio3": {
+        "Coins": [
+            "Bitcoin",
+            "Ethereum"
+        ],
+        "Fix_Currency": [
+            "eur"
+        ],
+        "Amount": [
+            "0",
+            "0"
+        ],
+        "Price_Buy": [
+            "0",
+            "0"
+        ],
+        "Alarm": [
+            "0",
+            "0"
+        ],
+        "View": [
+            "big"
+        ]
+    },
+    "Portfolio4": {
+        "Coins": [
+            "Bitcoin",
+            "Ethereum"
+        ],
+        "Fix_Currency": [
+            "eur"
+        ],
+        "Amount": [
+            "0",
+            "0"
+        ],
+        "Price_Buy": [
+            "0",
+            "0"
+        ],
+        "Alarm": [
+            "0",
+            "0"
+        ],
+        "View": [
+            "big"
+        ]
+    },
+    "First_View_Portfolio": "Portfolio1"
+}
