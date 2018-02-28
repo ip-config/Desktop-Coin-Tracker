@@ -1,5 +1,5 @@
  
-For Win and Linux in "releases"! (Compiled with Electron)
+For Win and Linux in "releases"! (Little .JS script packed with Electron)
 
 Source: coinmarketcap.com update every 5min<br>AutoRefresh every 3min<br><br>
   Cap = Complete amount all coins<br>
