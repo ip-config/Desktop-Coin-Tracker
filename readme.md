@@ -1,6 +1,8 @@
  
 For Win and Linux in "releases"! (Little .JS script packed with Electron)
 
+Start: Win = Coins.exe / Linux = Coins
+
 Source: coinmarketcap.com update every 5min<br>AutoRefresh every 3min<br><br>
   Cap = Complete amount all coins<br>
   GM = Global Market Cap<br><br>
