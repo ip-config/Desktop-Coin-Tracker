@@ -364,7 +364,7 @@ if (isNaN(erg[o]) || erg[o]==0){
   erg[o] = Math.round(erg[o]*100)/100
 
 
-tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg>  "+erg[o]+wahr+"</a><br><a>"+btcprice[o]+" BTC</a><span id="+coin[o]+"p> </span></td></thead><tbody></tbody></table>";
+tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg>  "+erg[o]+wahr+"</a><br><a class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"</a><a style= color:burlywood;font-size:18px;>"+btcbb[o]+" BTC</a><span id="+coin[o]+"p> </span></td></thead><tbody></tbody></table>";
 }
 
 
