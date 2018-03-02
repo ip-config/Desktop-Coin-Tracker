@@ -339,13 +339,25 @@ let u = low(coin[o])
 
 
 
+    let btc = btcprice[o]
 
+for (let i=0; i<btc.length; i++){
+
+if ((btc.charAt(i) == "1") || (btc.charAt(i) == "2")|| (btc.charAt(i) == "3")|| (btc.charAt(i) == "4")|| (btc.charAt(i) == "5")|| (btc.charAt(i) == "6")|| (btc.charAt(i) == "7")|| (btc.charAt(i) == "8")|| (btc.charAt(i) == "9")){
+
+
+btca.push(i)
+break
+}else {}
+}
+btcb.push(btcprice[o].slice(0, btca[o]))
+btcbb.push(btcprice[o].slice(btca[o], btcprice[o].lenght))
 
 
 erg[o] = (amm[o]*coinp[o])-(amm[o]*kamm[o])
 
 if (isNaN(erg[o]) || erg[o]==0){
-  tableq = "<table class=tt><thead><td class=tt><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg></a><img class=bil1 src="+bil+" /><br><a>"+btcprice[o]+" BTC</a><span id="+coin[o]+"p></span></td></thead><tbody></tbody></table>";
+  tableq = "<table class=tt><thead><td class=tt><span>"+coin[o]+"</span><a id="+coin[o]+"rang></a><a id="+coin[o]+"erg></a><img class=bil1 src="+bil+" /><br><a class=tg-lqy6 style= color:grey;font-size:18px;>"+btcb[o]+"</a><a style= color:burlywood;font-size:18px;>"+btcbb[o]+" BTC</a><span id="+coin[o]+"p></span></td></thead><tbody></tbody></table>";
 
 }else{
 
@@ -378,19 +390,7 @@ tableq = "<table class=tt><thead><td class=tt><img src="+bil+" class=bil1 /><spa
     let tp = Math.round(coind[o])
     let sp = Math.round(coinh[o])
     let hp = Math.round(coin1h[o])
-    let btc = btcprice[o]
 
-for (let i=0; i<btc.length; i++){
-
-if ((btc.charAt(i) == "1") || (btc.charAt(i) == "2")|| (btc.charAt(i) == "3")|| (btc.charAt(i) == "4")|| (btc.charAt(i) == "5")|| (btc.charAt(i) == "6")|| (btc.charAt(i) == "7")|| (btc.charAt(i) == "8")|| (btc.charAt(i) == "9")){
-
-
-btca.push(i)
-break
-}else {}
-}
-btcb.push(btcprice[o].slice(0, btca[o]))
-btcbb.push(btcprice[o].slice(btca[o], btcprice[o].lenght))
 
 if (isNaN(erg[o])){
   erg[o]= [0]
@@ -720,8 +720,7 @@ c[i]=jn
 waeh()
 
 localsave()
-load()
-
+location.reload()
 
 }
 
