@@ -4,10 +4,10 @@ For Win and Linux in "releases"! (Little .JS script packed with Electron)
 Start: Win = Coins.exe / Linux = ./Coins
 
 Readme
-Source: coinmarketcap.com they update every 5min,AutoRefresh tool every 3min<br>
+Source: coinmarketcap.com they update every 5min, AutoRefresh tool every 3min<br><br>
   Cap = Complete amount all coins<br>
-  GM = Global Market Cap<br>
-Pictures autoload from coinmarketcap, some coins have a dummy pic for some reason<br>Bitcoin and Ethereum are set as standard<br>
+  GM = Global Market Cap<br><br>
+Pictures autoload from coinmarketcap, some coins have a dummy pic for some reason<br>Bitcoin and Ethereum are set as standard<br><br>
 - Build your individual coin lists
 - Set buy price and amount for calculating profits
 - Set alarm timer to get info if a price is reached
