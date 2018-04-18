@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<script src="node_modules/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript"  src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="coins.js"></script>
+<script type="text/javascript" src="kernel.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="standart.css">
+
+
+   <script>
+   $(function() {
+	var availableTags = all;
+	$("#tags").autocomplete({
+		source: availableTags
+	});
+});
+</script>
+<script>
+$(function() {
+	first("config.json");
+
+	load();
+});
+</script>
+
+<title>Coins</title>
+
+<link rel="stylesheet" href="./node_modules/animate.css/animate.min.css">
+
+</head>
+
+<body>
+
+
+<button id="myBtn" class="set" style="float: right;">&nbsp;<img src="setbt.png" style="width:37px; height:37px;"></button>
+<a id="glob" style="float: right; color:orange"></a>
+<a  style="float: right;color: white;">GM:&nbsp; </a>
+<div id="zeit" style="margin:0px auto;color: white;"></div>
+
+  <a id="alles" style="float: right;"></a>
+
+  <a  style="float: right;color: white;">Cap:&nbsp; </a>
+
+
+
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close"></span>
+      <a style="display: flex;align-items: center;justify-content: center;">SETTINGS</a><br>
+      <a style="display: flex;align-items: center;justify-content: center;">Choose your Portfolio</a>
+      <table style="display: flex;align-items: center;justify-content: center;">
+      <tr>
+        <th style="font-family:Arial, sans-serif;font-size:16px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#7F7F7F;color:#000000;">
+          <div class="control-group">
+    <label class="control control-radio">
+      1
+      <input type="radio" id="port1" name="port" value="Portfolio1" onclick="portf(ueb=1)">
+      <div class="control_indicator"></div>
+     </label>
+    </th><th style="font-family:Arial, sans-serif;font-size:16px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#7F7F7F;color:#000000;">
+      <label class="control control-radio">
+        2
+      <input type="radio" id="port2" name="port" value="Portfolio2" onclick="portf(ueb=1)">
+      <div class="control_indicator"></div>
+     </label>
+    </th><th style="font-family:Arial, sans-serif;font-size:16px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#7F7F7F;color:#000000;">
+      <label class="control control-radio">
+        3
+      <input type="radio" id="port3" name="port" value="Portfolio3" onclick="portf(ueb=1)">
+      <div class="control_indicator"></div>
+     </label>
+    </th><th style="font-family:Arial, sans-serif;font-size:16px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#7F7F7F;color:#000000;">
+      <label class="control control-radio">
+        4
+      <input type="radio" id="port4" name="port" value="Portfolio4" onclick="portf(ueb=1)">
+      <div class="control_indicator"></div>
+     </label>
+   </div>
+
+</tr>
+</table><div class="line"style="position: relative; display: flex;align-items: center;justify-content: center;"></div>
+
+
+      <div style="float: right;clear: both;" style="width:300px;">
+        <button onclick="delall()" class="css3button">Delete All</button>
+        <button onclick="topf()" class="css3button">Add Top-</button>
+        <input type="number" id="topx" value="0" class=no-spinners style="width:30px;text-align: center;"></input>
+      </div>
+      <form autocomplete="off" action="/action_page.php">
+  <div style="float: right;clear: both;" class="autocomplete" style="width:300px;">
+    <input id="myInput" type="text"  placeholder="Search Coin Names...">
+  </div>
+</form>
+<script>
+autocomplete(document.getElementById("myInput"), forsearch);
+</script>
+      <button style="float: right;clear: both;" class="css3button" type="button" id="knopf" onclick="druck()">Add</button>
+
+      <div id="cn" style="float: right;clear: both;width:38%">
+      </div>
+      <div >
+        <a >Currency:</a>
+      <form style="position:absolute" action="" id="wahrung"  style="float: left;">
+        <div class="control-group">
+  <label class="control control-radio">
+    Euro
+        <input type="radio" name="wae" id="eur" value="eur" onclick="portf(ueb=1)">
+        <div class="control_indicator"></div>
+       </label>
+         <label class="control control-radio">
+           Dollar
+        <input  type="radio" name="wae" id="usd" value="usd" onclick="portf(ueb=1)">
+        <div class="control_indicator"></div>
+       </label>
+     </div>
+      </form><br><br><br><br>View:</a>
+      <form style="position:absolute" action="" id="view"  style="float: left;">
+        <div class="control-group">
+  <label class="control control-radio">
+    Small
+        <input style="width: 12px" type="radio" name="v" id="small" value="small" onclick="portf(ueb=1)">
+        <div class="control_indicator"></div>
+       </label>
+        <label class="control control-radio">
+          Big
+        <input style="width: 12px" type="radio" name="v" id="big" value="big" onclick="portf(ueb=1)">
+        <div class="control_indicator"></div>
+       </label>
+     </div>
+        <br>
+
+      </form></div><br><br><br>
+      <div id="nb">
+        <a >Choose your Category:</a><br>
+        <label class="switch">
+        <input type="checkbox" id="2" class="cat1" value="2" onclick="catsave()">
+        <span class="slider round"></span>
+        </label><a >&nbsp;&nbsp;Price</a><br>
+        <label class="switch">
+        <input type="checkbox" id="3" class="cat1" value="3" onclick="catsave()" style="float:right;">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;Price BTC</a><br>
+        <label class="switch">
+        <input type="checkbox" id="4" class="cat1" value="4" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;1H</a><br>
+        <label class="switch">
+        <input type="checkbox" id="5" class="cat1" value="5" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;24H</a><br>
+        <label class="switch">
+        <input type="checkbox" id="6" class="cat1" value="6" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;7D</a><br>
+        <label class="switch">
+        <input type="checkbox" id="7" class="cat1" value="7" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;Glob Market</a><br>
+        <label class="switch">
+        <input type="checkbox" id="8" class="cat1" value="8" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;Amount</a><br>
+        <label class="switch">
+        <input type="checkbox" id="9" class="cat1" value="9" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;Price@Buy</a><br>
+        <label class="switch">
+        <input type="checkbox" id="10" class="cat1" value="10" onclick="catsave()">
+        <span class="slider round" ></span>
+        </label><a >&nbsp;&nbsp;Alert</a><br>
+        <label class="switch">
+        <input type="checkbox" id="11" class="cat1" value="11" onclick="catsave()">
+        <span class="slider round" ></span>
+      </label><a style="margin-top:80px;">&nbsp;&nbsp;Your Capital</a><br>
+
+        <br>
+      </label>
+
+</div>
+<div id="cse">
+</div>
+
+  <!-- The Modal -->
+  <div id="myModal2" class="modal">
+<span class="close"></span>
+    <!-- Modal content -->
+    <div  class="modal-content">
+      <iframe src="readme.html" id="readme" name="targetframe" allowTransparency="true" scrolling="yes" frameborder="0" style="width:100%;height:500px">
+          </iframe>
+          <button class="close" onclick="exit2()">Exit</button>
+</div>
+</div>
+<button class="close" onclick="backup();" style="float: left;">Save Config</button>
+<button class="close" onclick="backupload();" style="float: left;">Load Config</button>
+<button id="myBtn2" class="close" style="float: left;">Readme</button>
+<button class="close" onclick="exit()">Exit</button>
+    </div>
+
+  </div>
+
+<div class="slim2" id="slim2">
+
+</div>
+
+<table id="stan">
+
+</table>
+
+        <select id="liste" name="liste" style="display:none;"> </select>
+
+  <script>
+var modal1 = document.getElementById("myModal")
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+	modal1.style.display = "block";
+};
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+	modal1.style.display = "none";
+};
+
+// When the user clicks anywhere outside of the modal, close it
+document.onclick = function(event) {
+	if (event.target == modal1) {
+		modal1.style.display = "none";
+	}
+};
+</script>
+  <script>
+let modal2 = document.getElementById("myModal2");
+
+// Get the button that opens the modal
+var btn2 = document.getElementById("myBtn2");
+
+// Get the <span> element that closes the modal
+var span2 = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn2.onclick = function() {
+	modal2.style.display = "block";
+};
+
+// When the user clicks on <span> (x), close the modal
+span2.onclick = function() {
+	modal2.style.display = "none";
+};
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+	if (event.target == modal2) {
+		modal2.style.display = "none";
+	}
+};
+</script>
+</body>
+
+
+
+</html>
