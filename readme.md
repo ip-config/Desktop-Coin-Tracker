@@ -1,7 +1,7 @@
  
 For Win and Linux in "releases"! (Little .JS script packed with Electron)
 
-Start: Win = Coins.exe / Linux = Coins
+Start: Win = Coins.exe / Linux = ./Coins
 
 Readme
 Source: coinmarketcap.com they update every 5min,AutoRefresh tool every 3min<br>
