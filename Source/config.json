@@ -45,11 +45,11 @@
         ],
         "Amount": [
             "0",
-            "69"
+            "0"
         ],
         "Price_Buy": [
             "0",
-            "94"
+            "0"
         ],
         "Alarm": [
             "0",
@@ -74,28 +74,20 @@
     "Portfolio3": {
         "Coins": [
             "Bitcoin",
-            "Ethereum",
-            "Ripple",
-            "Monero"
+            "Ethereum"
         ],
         "Fix_Currency": [
-            "usd"
+            "eur"
         ],
         "Amount": [
-            "0",
-            "0",
             "0",
             "0"
         ],
         "Price_Buy": [
             "0",
-            "0",
-            "0",
             "0"
         ],
         "Alarm": [
-            "0",
-            "0",
             "0",
             "0"
         ],
@@ -118,29 +110,25 @@
     "Portfolio4": {
         "Coins": [
             "Bitcoin",
-            "Ethereum",
-            "Litecoin"
+            "Ethereum"
         ],
         "Fix_Currency": [
-            "usd"
+            "eur"
         ],
         "Amount": [
-            "0",
             "0",
             "0"
         ],
         "Price_Buy": [
             "0",
-            "0",
             "0"
         ],
         "Alarm": [
             "0",
-            "0",
             "0"
         ],
         "View": [
-            "big"
+            "small"
         ],
         "Category": [
             "2",
@@ -155,5 +143,5 @@
             "11"
         ]
     },
-    "First_View_Portfolio": "firstview1"
+    "First_View_Portfolio": "Portfolio1"
 }
