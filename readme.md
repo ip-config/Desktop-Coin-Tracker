@@ -27,7 +27,7 @@ The program saves any input automatic. For saving and loading your config, goto 
 
 
 Donation
-BTC: 17nNodE3uhKdQJuat2NsaMe6aoJSaRzXsc
+BTC: 17nNodE3uhKdQJuat2NsaMe6aoJSaRzXsc<br>
 ETH: 0xe4af2278587645dd9dc238b5288c816437417bd8
 
 &copy;Escaflowne
