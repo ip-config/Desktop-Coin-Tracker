@@ -27,7 +27,7 @@
             ">",
             ">"
         ],
-        "View": "list",
+        "View": "big",
         "Category": {
             "rank": true,
             "price": true,

@@ -270,6 +270,9 @@ function init() {
 			onStop: function() {
 				$("#bigsort").html("");
 				$("#slim").html("");
+				capit.length = 0;
+				total = 0;
+
 				for (let i = 0; i < coinl.length; i++) {
 					let u = coinl[i].toLowerCase();
 					load(
