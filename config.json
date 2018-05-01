@@ -1,12 +1,16 @@
 {
+    "First_View_Portfolio": "1",
+    "Number_of_Portfolio": "1",
     "Portfolio1": {
         "Coins": [
             "Bitcoin",
             "Ethereum"
         ],
-        "Fix_Currency": [
-            "eur"
+        "Coinshort": [
+            "BTC",
+            "ETH"
         ],
+        "Fix_Currency": "EUR:€",
         "Amount": [
             "0",
             "0"
@@ -15,133 +19,27 @@
             "0",
             "0"
         ],
-        "Alarm": [
+        "Alert": [
             "0",
             "0"
         ],
-        "View": [
-            "small"
+        "Alert_direction": [
+            ">",
+            ">"
         ],
-        "Category": [
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
-        ]
-    },
-    "Portfolio2": {
-        "Coins": [
-            "Bitcoin",
-            "Ethereum"
-        ],
-        "Fix_Currency": [
-            "eur"
-        ],
-        "Amount": [
-            "0",
-            "0"
-        ],
-        "Price_Buy": [
-            "0",
-            "0"
-        ],
-        "Alarm": [
-            "0",
-            "0"
-        ],
-        "View": [
-            "small"
-        ],
-        "Category": [
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
-        ]
-    },
-    "Portfolio3": {
-        "Coins": [
-            "Bitcoin",
-            "Ethereum"
-        ],
-        "Fix_Currency": [
-            "eur"
-        ],
-        "Amount": [
-            "0",
-            "0"
-        ],
-        "Price_Buy": [
-            "0",
-            "0"
-        ],
-        "Alarm": [
-            "0",
-            "0"
-        ],
-        "View": [
-            "small"
-        ],
-        "Category": [
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
-        ]
-    },
-    "Portfolio4": {
-        "Coins": [
-            "Bitcoin",
-            "Ethereum"
-        ],
-        "Fix_Currency": [
-            "eur"
-        ],
-        "Amount": [
-            "0",
-            "0"
-        ],
-        "Price_Buy": [
-            "0",
-            "0"
-        ],
-        "Alarm": [
-            "0",
-            "0"
-        ],
-        "View": [
-            "small"
-        ],
-        "Category": [
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
-        ]
-    },
-    "First_View_Portfolio": "Portfolio1"
+        "View": "list",
+        "Category": {
+            "rank": true,
+            "price": true,
+            "market": true,
+            "pricebtcc": true,
+            "oneh": true,
+            "tfh": true,
+            "sevend": true,
+            "amount": true,
+            "byp": true,
+            "alert": true,
+            "capital": true
+        }
+    }
 }

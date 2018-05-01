@@ -9,6 +9,8 @@ if (handleSquirrelEvent(app)) {
     return;
 }
 
+
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
