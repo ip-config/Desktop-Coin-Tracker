@@ -26,7 +26,25 @@ let view;
 let nop;
 let total = 0;
 let firstview = "1";
-let dellist = ["coinl", "coink", "coinam", "coinbp", "coinal", "alsize"];
+let dellist = [
+	"coinl",
+	"coink",
+	"coinam",
+	"coinbp",
+	"coinal",
+	"alsize",
+	"btcprice",
+	"coin1h",
+	"coin24h",
+	"coin7d",
+	"coinm",
+	"bil",
+	"coinp",
+	"coinr",
+	"capit",
+	"btcb",
+	"btcbb"
+];
 let Portfolio1 = {
 	Coins: ["Bitcoin", "Ethereum"],
 	Coinshort: ["BTC", "ETH"],
@@ -35,7 +53,7 @@ let Portfolio1 = {
 	Price_Buy: ["0", "0"],
 	Alert: ["0", "0"],
 	Alert_direction: [">", ">"],
-	View: "list",
+	View: "big",
 	Category: {
 		rank: true,
 		price: true,
@@ -161,7 +179,8 @@ $(function() {
 document.addEventListener("DOMContentLoaded", init, false);
 function init() {
 	$(".autocomplete").autocomplete({
-		source: all
+		source: all,
+		delay: 500
 	});
 	for (let i = 0; i < wahrung.length; i++) {
 		$("#wahrungdd").append(
@@ -193,7 +212,6 @@ function init() {
 		$(".ddbt").hide();
 		obj["Portfolio" + firstview]["View"] = view;
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
-		clearload();
 	});
 
 	$("tbody#slim").sortable({
@@ -206,11 +224,10 @@ function init() {
 			dropzone.style.display = "none";
 			let new_index = ui.item.index();
 			let old_index = coinl.indexOf(vd);
-			array_move(coinl, old_index, new_index);
-			array_move(coink, old_index, new_index);
-			array_move(coinam, old_index, new_index);
-			array_move(coinbp, old_index, new_index);
-			array_move(coinal, old_index, new_index);
+			for (let i = 0; i < dellist.length; i++) {
+				array_move(eval(dellist[i]), old_index, new_index);
+			}
+
 			save(firstview);
 		}
 	});
@@ -225,11 +242,9 @@ function init() {
 			dropzone.style.display = "none";
 			let new_index = ui.item.index();
 			let old_index = coinl.indexOf(vd);
-			array_move(coinl, old_index, new_index);
-			array_move(coink, old_index, new_index);
-			array_move(coinam, old_index, new_index);
-			array_move(coinbp, old_index, new_index);
-			array_move(coinal, old_index, new_index);
+			for (let i = 0; i < dellist.length; i++) {
+				array_move(eval(dellist[i]), old_index, new_index);
+			}
 			save(firstview);
 		}
 	});
@@ -265,7 +280,7 @@ function init() {
 						let u = coinl[i].toLowerCase();
 						gettaasync(u, wa, i);
 					}
-				}, 175000);
+				}, 173000);
 			},
 			onStop: function() {
 				$("#bigsort").html("");
@@ -296,11 +311,35 @@ function init() {
 					);
 				}
 				hide();
+				if (document.getElementById("edi").checked) {
+					$(".numin").prop("disabled", false);
+					$(".numin").css({
+						color: "black",
+						"background-color": "white",
+						"border-style": "solid"
+					});
+					if (view == "big") {
+						$(".tt2").show();
+						$(".tt4").show();
+						$(".tt5").show();
+					}
+
+					if (view == "list") {
+						$("td:nth-child(" + $("#amount").prop("value") + ")").show();
+						$("td:nth-child(" + $("#byp").prop("value") + ")").show();
+						$("td:nth-child(" + $("#alert").prop("value") + ")").show();
+					}
+					$(".ddbt").show();
+				}
 				clock();
 			}
 		});
 	}
 	clock();
+
+	$("#exampleModal").on("hidden.bs.modal", function() {
+		clearload();
+	});
 
 	$(".add").click(function() {
 		let nc = $("#coinin").val();
@@ -355,30 +394,15 @@ function init() {
 		let u = coinl[coinl.length - 1].toLowerCase();
 		let i = coinl.length - 1;
 		alsize[i] = ">";
-		getta(u, wa, i);
-		load(
-			coinl[i],
-			bil[i],
-			coinr[i],
-			btcprice[i],
-			coinp[i],
-			coin1h[i],
-			coin24h[i],
-			coin7d[i],
-			coinm[i],
-			coinam[i],
-			coinbp[i],
-			coinal[i],
-			coink[i],
-			capit[i],
-			btcb[i],
-			btcbb[i],
-			alsize[i]
+
+		$("#cn").append(
+			"<li class=list-group-item style=text-align:center!important;>" +
+				erstergross(nc) +
+				"</li>"
 		);
 		hide();
 		save(firstview);
 		$("#coinin").val("");
-		clearload();
 	});
 
 	$(".topx").click(function() {
@@ -404,13 +428,18 @@ function init() {
 			} else {
 				coinl.push(erstergross(cmc[i]));
 				coink.push(sym[i]);
+				$("#cn").append(
+					"<li class=list-group-item style=text-align:center!important;>" +
+						erstergross(cmc[i]) +
+						"</li>"
+				);
 				f = false;
 			}
 			filler();
 			total = 0;
 			save(firstview);
 		}
-		clearload();
+
 		if (f == true) {
 			swal("All coins you wish are already in list");
 		}
@@ -433,7 +462,6 @@ function fiat() {
 	let a = $("#wahrungin").val();
 	obj["Portfolio" + firstview]["Fix_Currency"] = a;
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
-	clearload();
 }
 
 function listtoinput(id, value) {
@@ -797,7 +825,6 @@ function msgal(o, b, wahr) {
 	});
 	coinal[coinl.indexOf(o)] = "0";
 	savesingle(firstview, "Alert", coinal, coinl.indexOf(o));
-	clearload();
 }
 
 function alchange(i, coinlong2) {
@@ -856,13 +883,40 @@ function hidebig() {
 }
 
 function del(value) {
-	let item = coinl.indexOf(value);
 	for (let i = 0; i < dellist.length; i++) {
 		let a = eval(dellist[i]);
-		a.splice(item, 1);
+		a.splice(0, 1);
 	}
+
 	save(firstview);
-	clearload();
+	$("#bigsort").html("");
+	$("#slim").html("");
+	capit.length = 0;
+	total = 0;
+
+	for (let i = 0; i < coinl.length; i++) {
+		let u = coinl[i].toLowerCase();
+		load(
+			coinl[i],
+			bil[i],
+			coinr[i],
+			btcprice[i],
+			coinp[i],
+			coin1h[i],
+			coin24h[i],
+			coin7d[i],
+			coinm[i],
+			coinam[i],
+			coinbp[i],
+			coinal[i],
+			coink[i],
+			capit[i],
+			btcb[i],
+			btcbb[i],
+			alsize[i]
+		);
+	}
+	hide();
 }
 
 function hide() {
@@ -969,6 +1023,18 @@ function ed() {
 			"background-color": "white",
 			"border-style": "solid"
 		});
+		if (view == "big") {
+			$(".tt2").show();
+			$(".tt4").show();
+			$(".tt5").show();
+		}
+
+		if (view == "list") {
+			$("td:nth-child(" + $("#amount").prop("value") + ")").show();
+			$("td:nth-child(" + $("#byp").prop("value") + ")").show();
+			$("td:nth-child(" + $("#alert").prop("value") + ")").show();
+		}
+
 		$(".ddbt").show();
 	} else {
 		$(".numin").prop("disabled", true);
@@ -979,7 +1045,34 @@ function ed() {
 		});
 		$(".ddbt").hide();
 		save(firstview);
-		clearload();
+
+		$("#bigsort").html("");
+		$("#slim").html("");
+		capit.length = 0;
+		total = 0;
+		for (let i = 0; i < coinl.length; i++) {
+			let u = coinl[i].toLowerCase();
+			load(
+				coinl[i],
+				bil[i],
+				coinr[i],
+				btcprice[i],
+				coinp[i],
+				coin1h[i],
+				coin24h[i],
+				coin7d[i],
+				coinm[i],
+				coinam[i],
+				coinbp[i],
+				coinal[i],
+				coink[i],
+				capit[i],
+				btcb[i],
+				btcbb[i],
+				alsize[i]
+			);
+		}
+		hide();
 	}
 }
 
@@ -991,7 +1084,7 @@ function porttog(id) {
 
 	obj["First_View_Portfolio"] = id.toString();
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
-	clearload();
+	localload();
 }
 
 function clearload() {
@@ -1015,7 +1108,21 @@ function newportf() {
 	obj["Portfolio" + i] = Portfolio1;
 	obj["Number_of_Portfolio"] = b.toString();
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
-	clearload();
+	localload();
+}
+
+function localload() {
+	$("#allportin,#forbutton,#cn").html("");
+	first();
+	for (let i = 0; i < catnames.length; i++) {
+		$("#" + catnames[i]).prop("checked", category[catnames[i]]);
+	}
+	if (view == "big") {
+		$(".in2").prop("checked", false);
+	}
+	if (view == "list") {
+		$(".in2").prop("checked", true);
+	}
 }
 
 function delportf() {
@@ -1046,7 +1153,7 @@ function delportf() {
 			obj["Number_of_Portfolio"] = b.toString();
 			obj["First_View_Portfolio"] = b.toString();
 			fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
-			clearload();
+			localload();
 		}
 	});
 }
@@ -1057,10 +1164,8 @@ function savesingle(portfolio, id, arr, posi) {
 }
 
 function catsave(id, value) {
-	$("td:nth-child(" + value + ")").toggle();
 	category[catnames[catnames.indexOf(id)]] = $("#" + id).prop("checked");
 	savesingle(firstview, "Category", "category", id);
-	clearload();
 }
 
 function save(i) {
@@ -1136,7 +1241,7 @@ function delall() {
 			coinal.splice(0, coinal.length);
 			alsize.splice(0, alsize.length);
 			save(firstview);
-			clearload();
+			$("#cn").html("");
 		}
 	});
 }
@@ -1251,7 +1356,6 @@ function loadcfg() {
 
 				loadjson99 = JSON.parse(over);
 			} catch (e) {
-				console.log(result);
 				swal({
 					type: "warning",
 					title: "Your config.json is broken, check validity",
