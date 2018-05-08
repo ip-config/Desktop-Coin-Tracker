@@ -1,0 +1,45 @@
+{
+    "First_View_Portfolio": "1",
+    "Number_of_Portfolio": "1",
+    "Portfolio1": {
+        "Coins": [
+            "Bitcoin",
+            "Ethereum"
+        ],
+        "Coinshort": [
+            "BTC",
+            "ETH"
+        ],
+        "Fix_Currency": "EUR:€",
+        "Amount": [
+            "0",
+            "0"
+        ],
+        "Price_Buy": [
+            "0",
+            "0"
+        ],
+        "Alert": [
+            "0",
+            "0"
+        ],
+        "Alert_direction": [
+            ">",
+            ">"
+        ],
+        "View": "big",
+        "Category": {
+            "rank": true,
+            "price": true,
+            "market": true,
+            "pricebtcc": true,
+            "oneh": true,
+            "tfh": true,
+            "sevend": true,
+            "amount": true,
+            "byp": true,
+            "alert": true,
+            "capital": true
+        }
+    }
+}
