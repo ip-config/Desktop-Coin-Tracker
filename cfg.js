@@ -139,6 +139,8 @@ let fs = require("fs");
 const { dialog } = require("electron").remote;
 
 $(function() {
+	$("#loading").show();
+	$("#allcont").hide();
 	if (navigator.onLine) {
 	} else {
 		swal({
@@ -175,6 +177,8 @@ $(function() {
 	});
 	first();
 	loadall();
+	$("#loading").hide();
+	$("#allcont").show();
 });
 document.addEventListener("DOMContentLoaded", init, false);
 function init() {
@@ -635,12 +639,18 @@ function load(
 			"')>Smaller than</a></div>";
 		ddb = "";
 	}
-
 	if (cal > 0) {
 		vorz = als;
 	} else {
 		vorz = "";
 	}
+	listala = "";
+	if (view == "list") {
+		if (parseFloat(cal) > 0) {
+			listala = "<td><a title=@" + vorz + cal + ">&#x1f514;</a></td>";
+		}
+	}
+
 	$("#bigsort").append(
 		"<div id=" +
 			coinlong +
@@ -650,7 +660,9 @@ function load(
 			coinlong +
 			"add' class='tt ' ></a> <img class=bil1 src=" +
 			bil +
-			"><span class=w2>" +
+			"><span id=" +
+			coinlong +
+			"ala class=w2>" +
 			coinlong +
 			"<a class=ra>" +
 			rank +
@@ -715,7 +727,6 @@ function load(
 			fiatk +
 			"</td></tr></tbody></table></div>"
 	);
-
 	$("#slim").append(
 		"<tr class=delrow id=" +
 			coinlong +
@@ -772,9 +783,10 @@ function load(
 			"cap>" +
 			cap +
 			fiatk +
-			"</td></tr>"
+			"</td>" +
+			listala +
+			"</tr>"
 	);
-
 	if (cam == "0" || cam == "") {
 	} else {
 		if (mon > 0) {
@@ -808,6 +820,13 @@ function load(
 		}) +
 		" " +
 		fiatk;
+	if (view == "big") {
+		if (parseFloat(cal) > 0) {
+			$("#" + coinlong + "ala").append(
+				"<a title=@" + vorz + cal + ">&#x1f514;</a>"
+			);
+		}
+	}
 }
 
 function inal(coinlong, thi) {
@@ -822,6 +841,8 @@ function msgal(o, b, wahr) {
 		text: "ALERT! Price reached " + b + " " + wahr,
 		animation: false,
 		customClass: "animated tada"
+	}).then(result => {
+		clearload();
 	});
 	coinal[coinl.indexOf(o)] = "0";
 	savesingle(firstview, "Alert", coinal, coinl.indexOf(o));
@@ -1089,6 +1110,7 @@ function porttog(id) {
 
 function clearload() {
 	$("#cn,#allportin,#forbutton,#glob,#alles").html("");
+
 	capit.length = 0;
 	total = 0;
 	btca = [];
@@ -1098,6 +1120,8 @@ function clearload() {
 
 	first();
 	loadall();
+	$("#loading").hide();
+	$("#allcont").show();
 }
 
 function newportf() {
@@ -1172,16 +1196,46 @@ function save(i) {
 	for (let i = 0; i < coinam.length; i++) {
 		if (coinam[i] == "") {
 			coinam[i] = "0";
+		} else {
+			if (coinam[i] == "0") {
+			} else {
+				if (coinam[i].indexOf("0,") >= 0 || coinam[i].indexOf("0.") >= 0) {
+				} else {
+					if (coinam[i].charAt(0) == 0) {
+						coinam[i] = coinam[i].slice(1);
+					}
+				}
+			}
 		}
 	}
 	for (let i = 0; i < coinbp.length; i++) {
 		if (coinbp[i] == "") {
 			coinbp[i] = "0";
+		} else {
+			if (coinbp[i] == "0") {
+			} else {
+				if (coinbp[i].indexOf("0,") >= 0 || coinbp[i].indexOf("0.") >= 0) {
+				} else {
+					if (coinbp[i].charAt(0) == 0) {
+						coinbp[i] = coinbp[i].slice(1);
+					}
+				}
+			}
 		}
 	}
 	for (let i = 0; i < coinal.length; i++) {
 		if (coinal[i] == "") {
 			coinal[i] = "0";
+		} else {
+			if (coinal[i] == "0") {
+			} else {
+				if (coinal[i].indexOf("0,") >= 0 || coinal[i].indexOf("0.") >= 0) {
+				} else {
+					if (coinal[i].charAt(0) == 0) {
+						coinal[i] = coinal[i].slice(1);
+					}
+				}
+			}
 		}
 	}
 
