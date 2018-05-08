@@ -1,0 +1,33 @@
+{
+  "name": "Desktop Coin Tracker",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.8.4"
+  },
+  "dependencies": {
+    "JSV": "^4.0.2",
+    "animate.css": "^3.6.1",
+    "bootstrap": "^4.1.0",
+    "electron-window-state": "^4.1.1",
+    "flipclock": "^0.8.2",
+    "jquery": "^3.3.1",
+    "json-validator": "0.0.34",
+    "popper.js": "^1.14.3",
+    "sweetalert2": "^7.19.1"
+  }
+}
