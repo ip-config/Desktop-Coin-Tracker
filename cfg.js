@@ -644,10 +644,11 @@ function load(
 	} else {
 		vorz = "";
 	}
+
 	listala = "";
 	if (view == "list") {
 		if (parseFloat(cal) > 0) {
-			listala = "<td><a title=@" + vorz + cal + ">&#x1f514;</a></td>";
+			listala = "<td><a title='@" + als + cal + "'>&#x1f514;</a></td>";
 		}
 	}
 
@@ -823,7 +824,7 @@ function load(
 	if (view == "big") {
 		if (parseFloat(cal) > 0) {
 			$("#" + coinlong + "ala").append(
-				"<a title=@" + vorz + cal + ">&#x1f514;</a>"
+				"<a title='@" + vorz + cal + "'>&#x1f514;</a>"
 			);
 		}
 	}
