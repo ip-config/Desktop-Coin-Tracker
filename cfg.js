@@ -342,7 +342,13 @@ function init() {
 	clock();
 
 	$("#exampleModal").on("hidden.bs.modal", function() {
-		clearload();
+		$("#loading").show();
+		$("#allcont").hide();
+		setTimeout(function() {
+			clearload();
+			$("#loading").hide();
+			$("#allcont").show();
+		}, 50);
 	});
 
 	$(".add").click(function() {
@@ -484,7 +490,13 @@ function erstergross(string) {
 function httpGet(theUrl) {
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("GET", theUrl, false);
+
 	xmlHttp.send(null);
+	if (xmlHttp.status == 429) {
+		swal(
+			"Your CoinMarketCap.com API LIMIT is reached!<br>Reset your internet connection to get a new IP<br>or wait some time..<br>and restart programm"
+		);
+	}
 	data2 = xmlHttp.responseText;
 	data = JSON.parse(data2);
 }
@@ -1302,42 +1314,44 @@ function delall() {
 }
 
 function gettaasync(u, wa, i) {
-	$.ajax({
-		url: "https://api.coinmarketcap.com/v1/ticker/" + u + "/?convert=" + wa,
-		success: function(data) {
-			btcprice[i] = data[0]["price_btc"];
-			coin1h[i] = data[0]["percent_change_1h"];
-			coinp[i] = data[0]["price_" + wa];
-			coinr[i] = " #" + data[0].rank;
-			coin7d[i] = data[0]["percent_change_7d"];
-			coin24h[i] = data[0]["percent_change_24h"];
-			coinm[i] = Math.round(data[0]["market_cap_" + wa]);
-			bil[i] = "https://coincheckup.com/images/coins/" + u + ".png";
-			let btc = btcprice[i];
+	try {
+		$.ajax({
+			url: "https://api.coinmarketcap.com/v1/ticker/" + u + "/?convert=" + wa,
+			success: function(data) {
+				btcprice[i] = data[0]["price_btc"];
+				coin1h[i] = data[0]["percent_change_1h"];
+				coinp[i] = data[0]["price_" + wa];
+				coinr[i] = " #" + data[0].rank;
+				coin7d[i] = data[0]["percent_change_7d"];
+				coin24h[i] = data[0]["percent_change_24h"];
+				coinm[i] = Math.round(data[0]["market_cap_" + wa]);
+				bil[i] = "https://coincheckup.com/images/coins/" + u + ".png";
+				let btc = btcprice[i];
 
-			for (let o = 0; o < btc.length - 1; o++) {
-				if (
-					btc.charAt(o) == "1" ||
-					btc.charAt(o) == "2" ||
-					btc.charAt(o) == "3" ||
-					btc.charAt(o) == "4" ||
-					btc.charAt(o) == "5" ||
-					btc.charAt(o) == "6" ||
-					btc.charAt(o) == "7" ||
-					btc.charAt(o) == "8" ||
-					btc.charAt(o) == "9"
-				) {
-					btca.push(o);
-					break;
-				} else {
+				for (let o = 0; o < btc.length - 1; o++) {
+					if (
+						btc.charAt(o) == "1" ||
+						btc.charAt(o) == "2" ||
+						btc.charAt(o) == "3" ||
+						btc.charAt(o) == "4" ||
+						btc.charAt(o) == "5" ||
+						btc.charAt(o) == "6" ||
+						btc.charAt(o) == "7" ||
+						btc.charAt(o) == "8" ||
+						btc.charAt(o) == "9"
+					) {
+						btca.push(o);
+						break;
+					} else {
+					}
 				}
-			}
 
-			btcb.push(btcprice[i].slice(0, btca[i]));
-			btcbb.push(btcprice[i].slice(btca[i], btcprice[i].lenght));
-		}
-	});
-	filler();
+				btcb.push(btcprice[i].slice(0, btca[i]));
+				btcbb.push(btcprice[i].slice(btca[i], btcprice[i].lenght));
+			}
+		});
+		filler();
+	} catch (e) {}
 }
 
 function getta(u, wa, i) {
