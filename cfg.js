@@ -1,5 +1,6 @@
 let cmc = [];
 let sym = [];
+let id = [];
 let all = [];
 let coinl = [];
 let coink = [];
@@ -141,40 +142,23 @@ const { dialog } = require("electron").remote;
 $(function() {
 	$("#loading").show();
 	$("#allcont").hide();
-	if (navigator.onLine) {
-	} else {
-		swal({
-			title: "No Internet!",
-			text: "AutoRefresh in 1min, or check connection and restart program",
-			timer: 60000,
-			onOpen: () => {
-				swal.showLoading();
-			}
-		}).then(result => {
-			if (
-				// Read more about handling dismissals
-				result.dismiss === swal.DismissReason.timer
-			) {
-				location.reload();
-			}
-		});
-	}
 
-	$.get("https://api.coinmarketcap.com/v1/ticker/?limit=0", function(data) {
-		for (let i = 0; i < data.length; i++) {
-			cmc[i] = data[i].id;
-			sym[i] = data[i].symbol;
-			all[i] = cmc[i] + ": " + sym[i];
-			$("#ddm").append(
-				"<a class=dropdown-item id=coinx onclick=listtoinput(id,this.innerHTML) value=" +
-					i +
-					">" +
-					all[i] +
-					"</a>"
-			);
-		}
-		all.sort();
-	});
+	httpGet("https://api.coinmarketcap.com/v2/listings/");
+	for (let i = 0; i < Object.keys(data.data).length; i++) {
+		cmc[i] = data.data[i].website_slug;
+		sym[i] = data.data[i].symbol;
+		id[i] = data.data[i].id;
+		all[i] = cmc[i] + ": " + sym[i];
+		$("#ddm").append(
+			"<a class=dropdown-item id=coinx onclick=listtoinput(id,this.innerHTML) value=" +
+				i +
+				">" +
+				all[i] +
+				"</a>"
+		);
+	}
+	all.sort();
+
 	first();
 	loadall();
 	$("#loading").hide();
@@ -407,7 +391,7 @@ function init() {
 
 		$("#cn").append(
 			"<li class=list-group-item style=text-align:center!important;>" +
-				erstergross(nc) +
+				erstergross(nc.substring(0, nc.search(":"))) +
 				"</li>"
 		);
 		hide();
@@ -426,30 +410,35 @@ function init() {
 			swal("You can maximal add Top50 Coins");
 			return;
 		}
+		httpGet("https://api.coinmarketcap.com/v2/ticker/?limit=" + top);
+		let keys = Object.keys(data.data);
+
 		for (let i = 0; i < top; i++) {
 			if (coinl.length >= 50) {
 				swal("You can maximal add 50 Coins");
 				return;
 			}
+			console.log(data.data[keys[i]].symbol);
+			let topr = data.data[keys[i]].rank;
+
 			if (
-				coinl.indexOf(erstergross(cmc[i])) >= 0 ||
-				coink.indexOf(sym[i]) >= 0
+				coinl.indexOf(erstergross(data.data[keys[i]].website_slug)) >= 0 ||
+				coink.indexOf(data.data[keys[i]].symbol) >= 0
 			) {
 			} else {
-				coinl.push(erstergross(cmc[i]));
-				coink.push(sym[i]);
+				coinl[topr - 1] = erstergross(data.data[keys[i]].website_slug);
+				coink[topr - 1] = data.data[keys[i]].symbol;
 				$("#cn").append(
 					"<li class=list-group-item style=text-align:center!important;>" +
-						erstergross(cmc[i]) +
+						erstergross(data.data[keys[i]].website_slug) +
 						"</li>"
 				);
 				f = false;
 			}
-			filler();
-			total = 0;
-			save(firstview);
 		}
-
+		filler();
+		total = 0;
+		save(firstview);
 		if (f == true) {
 			swal("All coins you wish are already in list");
 		}
@@ -496,6 +485,24 @@ function httpGet(theUrl) {
 		swal(
 			"Your CoinMarketCap.com API LIMIT is reached!<br>Reset your internet connection to get a new IP<br>or wait some time..<br>and restart programm"
 		);
+	}
+	if (xmlHttp.status == 404) {
+		swal({
+			title: "Error in config.json",
+			text:
+				"A coin in your config.json is not on CoinMarketCap.com delete the coin manuell in config.json or delete file to load default config",
+			type: "warning",
+
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Default config"
+		}).then(result => {
+			if (result.value) {
+				fs.writeFileSync("config.json", JSON.stringify(def, null, 4), "utf-8");
+				location.reload();
+			}
+		});
 	}
 	data2 = xmlHttp.responseText;
 	data = JSON.parse(data2);
@@ -558,10 +565,10 @@ function load(
 	btcbb2,
 	als
 ) {
-	$.get("https://api.coinmarketcap.com/v1/global/?convert=" + wa, function(
+	$.get("https://api.coinmarketcap.com/v2/global/?convert=" + wa, function(
 		data
 	) {
-		glob = Math.round(data["total_market_cap_" + wa]);
+		glob = Math.round(data.data.quotes[wa.toUpperCase()].total_market_cap);
 		if (glob > 999999999) {
 			document.getElementById("glob").innerHTML =
 				"GM: " +
@@ -660,7 +667,8 @@ function load(
 	listala = "";
 	if (view == "list") {
 		if (parseFloat(cal) > 0) {
-			listala = "<td><a title='@" + als + cal + "'>&#x1f514;</a></td>";
+			listala =
+				"<td><a title='@" + coinprice + als + cal + "'>&#x1f514;</a></td>";
 		}
 	}
 
@@ -677,7 +685,7 @@ function load(
 			coinlong +
 			"ala class=w2>" +
 			coinlong +
-			"<a class=ra>" +
+			"<a class=ra> #" +
 			rank +
 			"</a></span></a><br><a class=tg-lqy6 style= color:grey>" +
 			btcb2 +
@@ -836,7 +844,7 @@ function load(
 	if (view == "big") {
 		if (parseFloat(cal) > 0) {
 			$("#" + coinlong + "ala").append(
-				"<a title='@" + vorz + cal + "'>&#x1f514;</a>"
+				"<a title='@" + coinprice + vorz + cal + "'>&#x1f514;</a>"
 			);
 		}
 	}
@@ -1005,48 +1013,141 @@ function first() {
 			}
 		});
 	}
-	obj = JSON.parse(cf);
-	let loadjson = obj;
-	firstview = loadjson.First_View_Portfolio;
-	nop = eval("loadjson.Number_of_Portfolio");
-	coinl = eval("loadjson.Portfolio" + firstview + ".Coins");
-	coink = eval("loadjson.Portfolio" + firstview + ".Coinshort");
-	fiatl = eval("loadjson.Portfolio" + firstview + ".Fix_Currency");
-	coinam = eval("loadjson.Portfolio" + firstview + ".Amount");
-	coinbp = eval("loadjson.Portfolio" + firstview + ".Price_Buy");
-	coinal = eval("loadjson.Portfolio" + firstview + ".Alert");
-	alsize = eval("loadjson.Portfolio" + firstview + ".Alert_direction");
-	view = eval("loadjson.Portfolio" + firstview + ".View");
-	category = eval("loadjson.Portfolio" + firstview + ".Category");
-	for (let i = 1; i - 1 < nop; i++) {
-		$("#allportin").append(
-			"<th><div ><label class=switch><input class=portf id=" +
-				i +
-				"   type=checkbox check=false onclick=porttog(id)><span class=slider></span></label><a class=pnum>&nbsp;&nbsp;" +
-				i +
-				"</a></div></th>"
+	try {
+		obj = JSON.parse(cf);
+		let loadjson = obj;
+		firstview = loadjson.First_View_Portfolio;
+		nop = eval("loadjson.Number_of_Portfolio");
+		coinl = eval("loadjson.Portfolio" + firstview + ".Coins");
+		coink = eval("loadjson.Portfolio" + firstview + ".Coinshort");
+		fiatl = eval("loadjson.Portfolio" + firstview + ".Fix_Currency");
+		coinam = eval("loadjson.Portfolio" + firstview + ".Amount");
+		coinbp = eval("loadjson.Portfolio" + firstview + ".Price_Buy");
+		coinal = eval("loadjson.Portfolio" + firstview + ".Alert");
+		alsize = eval("loadjson.Portfolio" + firstview + ".Alert_direction");
+		view = eval("loadjson.Portfolio" + firstview + ".View");
+		category = eval("loadjson.Portfolio" + firstview + ".Category");
+		for (let i = 1; i - 1 < nop; i++) {
+			$("#allportin").append(
+				"<th><div ><label class=switch><input class=portf id=" +
+					i +
+					"   type=checkbox check=false onclick=porttog(id)><span class=slider></span></label><a class=pnum>&nbsp;&nbsp;" +
+					i +
+					"</a></div></th>"
+			);
+		}
+		$("#forbutton").append(
+			"<button onclick=newportf() type=button class=btnnew>+</button><button onclick=delportf() type=button style=background:red class=btnnew>-</button>"
 		);
-	}
-	$("#forbutton").append(
-		"<button onclick=newportf() type=button class=btnnew>+</button><button onclick=delportf() type=button style=background:red class=btnnew>-</button>"
-	);
-	if (alsize == undefined || alsize.length == 0) {
+		if (alsize == undefined || alsize.length == 0) {
+			for (let i = 0; i < coinl.length; i++) {
+				alsize[i] = ">";
+			}
+		}
 		for (let i = 0; i < coinl.length; i++) {
-			alsize[i] = ">";
+			$("#cn").append(
+				"<li class=list-group-item style=text-align:center!important;>" +
+					coinl[i] +
+					"</li>"
+			);
+		}
+		fiatk = fiatl.substring(fiatl.search(":") + 1, fiatl.length);
+		wa = fiatl.substring(0, fiatl.search(":")).toLowerCase();
+		$("#lp").html("Price " + fiatk);
+		$("#" + firstview).prop("checked", true);
+		$("#wahrungin").val(fiatl);
+	} catch (e) {
+		if (
+			e == "TypeError: Cannot set property '0' of undefined" ||
+			"TypeError: Cannot read property 'Coins' of undefined"
+		) {
+			obj = JSON.parse(cf);
+			let loadjson = obj;
+
+			let loadold = new Object();
+			loadold = {
+				First_View_Portfolio: "1",
+				Number_of_Portfolio: "4",
+				Portfolio1: {},
+				Portfolio2: {},
+				Portfolio3: {},
+				Portfolio4: {}
+			};
+
+			for (let o = 1; o < 5; o++) {
+				coink = [];
+				alsize = [];
+				let b = eval("loadjson.Portfolio" + o + ".Coins");
+				loadold["Portfolio" + o].Coins = b;
+
+				setTimeout(function() {
+					let y = [];
+					let x = [];
+					for (let i = 0; i < b.length; i++) {
+						x.push(sym[cmc.indexOf(b[i].toLowerCase())]);
+						y.push(">");
+					}
+					loadold["Portfolio" + o].Coinshort = x;
+					loadold["Portfolio" + o].Alert_direction = y;
+					loadold["Portfolio" + o].Fix_Currency = "EUR:€";
+					loadold["Portfolio" + o].Amount = eval(
+						"loadjson.Portfolio" + o + ".Amount"
+					);
+					loadold["Portfolio" + o].Price_Buy = eval(
+						"loadjson.Portfolio" + o + ".Price_Buy"
+					);
+					loadold["Portfolio" + o].Alert = eval(
+						"loadjson.Portfolio" + o + ".Alarm"
+					);
+					loadold["Portfolio" + o].View = "list";
+					loadold["Portfolio" + o].Category = {
+						rank: true,
+						price: true,
+						market: true,
+						pricebtcc: true,
+						oneh: true,
+						tfh: true,
+						sevend: true,
+						amount: true,
+						byp: true,
+						alert: true,
+						capital: true
+					};
+					try {
+						fs.writeFileSync(
+							"config.json",
+							JSON.stringify(loadold, null, 4),
+							"utf-8"
+						);
+						location.reload();
+					} catch (e) {
+						console.log("Failed to save the file !");
+					}
+					console.log(loadold);
+				}, 300);
+			}
+		} else {
+			swal({
+				title: "Error in config.json",
+				text: "Check your config.json or load default",
+				type: "warning",
+
+				showCancelButton: true,
+				confirmButtonColor: "#3085d6",
+				cancelButtonColor: "#d33",
+				confirmButtonText: "Default config"
+			}).then(result => {
+				if (result.value) {
+					fs.writeFileSync(
+						"config.json",
+						JSON.stringify(def, null, 4),
+						"utf-8"
+					);
+					location.reload();
+				}
+			});
 		}
 	}
-	for (let i = 0; i < coinl.length; i++) {
-		$("#cn").append(
-			"<li class=list-group-item style=text-align:center!important;>" +
-				coinl[i] +
-				"</li>"
-		);
-	}
-	fiatk = fiatl.substring(fiatl.search(":") + 1, fiatl.length);
-	wa = fiatl.substring(0, fiatl.search(":")).toLowerCase();
-	$("#lp").html("Price " + fiatk);
-	$("#" + firstview).prop("checked", true);
-	$("#wahrungin").val(fiatl);
 }
 
 function ed() {
@@ -1312,22 +1413,108 @@ function delall() {
 		}
 	});
 }
+function btcget(u, i) {
+	let idnew = id[cmc.indexOf(u)];
+	httpGet("https://api.coinmarketcap.com/v2/ticker/" + idnew + "/?convert=BTC");
 
+	btcprice[i] = data.data.quotes["BTC"].price.toString();
+
+	let btc = btcprice[i];
+	if (u == "bitcoin") {
+		btca.push(0);
+	}
+	if (btc.indexOf("e") > 0) {
+		let a = btc.charAt(btc.length - 1);
+		let btcueb = "0.";
+		let b = btc.slice(0, btc.indexOf("e"));
+		let c = b.slice(0, b.indexOf(".")) + b.slice(b.indexOf(".") + 1);
+
+		for (let i = 0; i < btc.charAt(btc.length - 1) - 1; i++) {
+			btcueb += "0";
+		}
+		btcb.push(btcueb);
+		btcbb.push(c);
+		btca.push(0);
+	} else {
+		for (let o = 0; o < btc.length - 1; o++) {
+			if (
+				btc.charAt(o) == "1" ||
+				btc.charAt(o) == "2" ||
+				btc.charAt(o) == "3" ||
+				btc.charAt(o) == "4" ||
+				btc.charAt(o) == "5" ||
+				btc.charAt(o) == "6" ||
+				btc.charAt(o) == "7" ||
+				btc.charAt(o) == "8" ||
+				btc.charAt(o) == "9"
+			) {
+				btca.push(o);
+				break;
+			}
+		}
+
+		btcb.push(btcprice[i].slice(0, btca[i]));
+		btcbb.push(btcprice[i].slice(btca[i], 10));
+	}
+	filler();
+}
+function inet() {
+	if (!navigator.onLine) {
+		swal({
+			title: "No Internet!",
+			text: "AutoRefresh in 1min, or check connection and restart program",
+			timer: 60000,
+			onOpen: () => {
+				swal.showLoading();
+			}
+		}).then(result => {
+			if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.timer
+			) {
+				location.reload();
+			}
+		});
+	}
+}
 function gettaasync(u, wa, i) {
-	try {
-		$.ajax({
-			url: "https://api.coinmarketcap.com/v1/ticker/" + u + "/?convert=" + wa,
-			success: function(data) {
-				btcprice[i] = data[0]["price_btc"];
-				coin1h[i] = data[0]["percent_change_1h"];
-				coinp[i] = data[0]["price_" + wa];
-				coinr[i] = " #" + data[0].rank;
-				coin7d[i] = data[0]["percent_change_7d"];
-				coin24h[i] = data[0]["percent_change_24h"];
-				coinm[i] = Math.round(data[0]["market_cap_" + wa]);
-				bil[i] = "https://coincheckup.com/images/coins/" + u + ".png";
-				let btc = btcprice[i];
+	inet();
+	let idnew = id[cmc.indexOf(u)];
+	$.ajax({
+		url: "https://api.coinmarketcap.com/v2/ticker/" + idnew + "/?convert=" + wa,
+		success: function(data) {
+			coin1h[i] = data.data.quotes[wa.toUpperCase()].percent_change_1h;
+			coinp[i] = data.data.quotes[wa.toUpperCase()].price;
+			coinr[i] = data.data.rank;
+			coin7d[i] = data.data.quotes[wa.toUpperCase()].percent_change_7d;
+			coin24h[i] = data.data.quotes[wa.toUpperCase()].percent_change_24h;
+			coinm[i] = Math.round(data.data.quotes[wa.toUpperCase()].market_cap);
+			bil[i] = "https://coincheckup.com/images/coins/" + u + ".png";
+		}
+	});
 
+	$.ajax({
+		url: "https://api.coinmarketcap.com/v2/ticker/" + idnew + "/?convert=BTC",
+		success: function(data) {
+			btcprice[i] = data.data.quotes["BTC"].price.toString();
+
+			let btc = btcprice[i];
+			if (u == "bitcoin") {
+				btca.push(0);
+			}
+			if (btc.indexOf("e") > 0) {
+				let a = btc.charAt(btc.length - 1);
+				let btcueb = "0.";
+				let b = btc.slice(0, btc.indexOf("e"));
+				let c = b.slice(0, b.indexOf(".")) + b.slice(b.indexOf(".") + 1);
+
+				for (let i = 0; i < btc.charAt(btc.length - 1) - 1; i++) {
+					btcueb += "0";
+				}
+				btcb.push(btcueb);
+				btcbb.push(c);
+				btca.push(0);
+			} else {
 				for (let o = 0; o < btc.length - 1; o++) {
 					if (
 						btc.charAt(o) == "1" ||
@@ -1342,50 +1529,33 @@ function gettaasync(u, wa, i) {
 					) {
 						btca.push(o);
 						break;
-					} else {
 					}
 				}
 
 				btcb.push(btcprice[i].slice(0, btca[i]));
-				btcbb.push(btcprice[i].slice(btca[i], btcprice[i].lenght));
+				btcbb.push(btcprice[i].slice(btca[i], 10));
 			}
-		});
-		filler();
-	} catch (e) {}
+			filler();
+		}
+	});
 }
 
 function getta(u, wa, i) {
-	httpGet("https://api.coinmarketcap.com/v1/ticker/" + u + "/?convert=" + wa);
-	btcprice[i] = data[0]["price_btc"];
-	coin1h[i] = data[0]["percent_change_1h"];
-	coinp[i] = data[0]["price_" + wa];
-	coinr[i] = " #" + data[0].rank;
-	coin7d[i] = data[0]["percent_change_7d"];
-	coin24h[i] = data[0]["percent_change_24h"];
-	coinm[i] = Math.round(data[0]["market_cap_" + wa]);
-	bil[i] = "https://coincheckup.com/images/coins/" + u + ".png";
-	let btc = btcprice[i];
+	inet();
+	let idnew = id[cmc.indexOf(u)];
+	httpGet(
+		"https://api.coinmarketcap.com/v2/ticker/" + idnew + "/?convert=" + wa
+	);
 
-	for (let o = 0; o < btc.length - 1; o++) {
-		if (
-			btc.charAt(o) == "1" ||
-			btc.charAt(o) == "2" ||
-			btc.charAt(o) == "3" ||
-			btc.charAt(o) == "4" ||
-			btc.charAt(o) == "5" ||
-			btc.charAt(o) == "6" ||
-			btc.charAt(o) == "7" ||
-			btc.charAt(o) == "8" ||
-			btc.charAt(o) == "9"
-		) {
-			btca.push(o);
-			break;
-		} else {
-		}
-	}
-	btcb.push(btcprice[i].slice(0, btca[i]));
-	btcbb.push(btcprice[i].slice(btca[i], btcprice[i].lenght));
-	filler();
+	coin1h[i] = data.data.quotes[wa.toUpperCase()].percent_change_1h;
+	coinp[i] = data.data.quotes[wa.toUpperCase()].price;
+	coinr[i] = data.data.rank;
+	coin7d[i] = data.data.quotes[wa.toUpperCase()].percent_change_7d;
+	coin24h[i] = data.data.quotes[wa.toUpperCase()].percent_change_24h;
+	coinm[i] = Math.round(data.data.quotes[wa.toUpperCase()].market_cap);
+	bil[i] = "https://coincheckup.com/images/coins/" + u + ".png";
+
+	btcget(u, i);
 }
 
 function search(nameKey, myArray) {
