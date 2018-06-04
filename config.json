@@ -12,11 +12,11 @@
         ],
         "Fix_Currency": "EUR:€",
         "Amount": [
-            "0",
-            "0"
+            "1",
+            "2"
         ],
         "Price_Buy": [
-            "0",
+            "5000",
             "0"
         ],
         "Alert": [
@@ -39,7 +39,9 @@
             "amount": true,
             "byp": true,
             "alert": true,
-            "capital": true
+            "capital": true,
+            "profit": true
         }
-    }
+    },
+    "Profit_Capital": 0
 }

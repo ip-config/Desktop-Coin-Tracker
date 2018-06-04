@@ -12,6 +12,8 @@ if (handleSquirrelEvent(app)) {
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
+
+
 const path = require("path");
 const url = require("url");
 
@@ -37,13 +39,16 @@ app.on("ready", function() {
 		url.format({
 			pathname: path.join(__dirname, "index.html"),
 			protocol: "file:",
-			slashes: true
+			slashes: true,
+			
 		})
 	);
+	
 	// Let us register listeners on the window, so we can update the state
 	// automatically (the listeners will be removed when the window is closed)
 	// and restore the maximized or full screen state
-	mainWindowState.manage(win);
+	mainWindowState.manage(win);	
+   
 });
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
@@ -61,7 +66,7 @@ app.on("activate", function() {
 		createWindow();
 	}
 });
-
+ 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
@@ -127,4 +132,5 @@ function handleSquirrelEvent(application) {
 			application.quit();
 			return true;
 	}
+	
 }
