@@ -14,6 +14,7 @@ Pictures autoload from coinmarketcap, some coins have a dummy pic for some reaso
 - Set alarm timer for every coin 
 - Set up diffrent portfolio
 - Switch between 2 view styles
+- Click on Profit in mainview to switch profit/capital
 <br>
 
 To switch the position of your coin just drag and drop your coins,
