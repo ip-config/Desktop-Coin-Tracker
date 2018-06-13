@@ -105,8 +105,53 @@ let catnames = [
 	"capital",
 	"profit"
 ];
+let searchcol = [
+	"thrank",
+	"lp",
+	"mp",
+	"thbtc",
+	"th1h",
+	"th24h",
+	"th7d",
+	"thamount",
+	"thpricebuy",
+	"thalert",
+	"pp",
+	"cp"
+];
+let allcolid = [
+	"thrank",
+	"thcoin",
+	"lp",
+	"mp",
+	"thbtc",
+	"th1h",
+	"th24h",
+	"th7d",
+	"thamount",
+	"thpricebuy",
+	"thalert",
+	"pp",
+	"cp"
+];
+let allcol = [
+	"<th id=thrank scope=col>Rank</th>",
+	"<th id=thcoin scope=col>Coin</th>",
+	"<th id=lp scope=col>Price</th>",
+	"<th id=mp scope=col>Market</th>",
+	"<th id=thbtc scope=col >BTC</th>",
+	"<th id=th1h scope=col>1h</th>",
+	"<th id=th24h scope=col>24h</th>",
+	"<th id=th7d scope=col>7d</th>",
+	"<th id=thamount scope=col>Amount</th>",
+	"<th id=thpricebuy scope=col>Price@Buy</th>",
+	"<th id=thalert scope=col>Alert</th>",
+	"	<th id=pp scope=col>Profit</th>",
+	"<th id=cp scope=col>Capital</th>"
+];
 let zu = 0;
 let cc = 0;
+let roundup = 2;
 let swal = require("sweetalert2");
 let path = require("path");
 
@@ -171,16 +216,65 @@ function init() {
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 	});
 
+	var scroll = "";
+	var $scrollable = $("#slimall");
+	function scrolling() {
+		if (scroll == "up") {
+			$scrollable.scrollTop($scrollable.scrollTop() - 5);
+			setTimeout(scrolling, 50);
+		} else if (scroll == "down") {
+			$scrollable.scrollTop($scrollable.scrollTop() + 5);
+			setTimeout(scrolling, 50);
+		}
+	}
+
+	var scroll2 = "";
+	var $scrollable2 = $("#bigsort");
+	function scrolling2() {
+		if (scroll2 == "up") {
+			$scrollable2.scrollTop($scrollable2.scrollTop() - 5);
+			setTimeout(scrolling2, 50);
+		} else if (scroll2 == "down") {
+			$scrollable2.scrollTop($scrollable2.scrollTop() + 5);
+			setTimeout(scrolling2, 50);
+		}
+	}
+
 	$("tbody#slim").sortable({
 		opacity: 0.7,
+
+		scroll: false,
+		sort: function(event, ui) {
+			if (!ui.helper) return;
+
+			if (ui.offset.top < 200) {
+				scroll = "up";
+			} else {
+				scroll = "";
+			}
+			if (ui.offset.top > $(window).height() - 50) {
+				scroll = "down";
+			}
+			scrolling();
+		},
+		over: function(event, ui) {
+			scroll = "";
+		},
+		deactivate: function(event, ui) {
+			scroll = "";
+		},
+
 		activate: function(event, ui) {
+			$("#udbt").hide();
+
 			dropzone.style.display = "block";
 			vd = ui.item[0].id;
 		},
 		stop: function(event, ui) {
+			$("#udbt").show();
 			dropzone.style.display = "none";
 			let new_index = ui.item.index();
-			let old_index = coinl.indexOf(vd);
+			let old_index = coinl.indexOf(vd.slice(0, vd.indexOf("maintr")));
 			for (let i = 0; i < dellist.length; i++) {
 				array_move(eval(dellist[i]), old_index, new_index);
 			}
@@ -188,17 +282,39 @@ function init() {
 			save(firstview);
 		}
 	});
+
 	$(".bigsort").sortable({
 		opacity: 0.7,
 		items: ".sortable",
+		sort: function(event, ui) {
+			if (!ui.helper) return;
+			if (ui.offset.top < 100) {
+				scroll2 = "up";
+			} else {
+				scroll2 = "";
+			}
+			if (ui.offset.top > $(window).height() - 200) {
+				scroll2 = "down";
+			}
+			scrolling2();
+		},
+		over: function(event, ui) {
+			scroll2 = "";
+		},
+		deactivate: function(event, ui) {
+			scroll2 = "";
+		},
 		activate: function(event, ui) {
+			$("#udbt").hide();
 			dropzone.style.display = "block";
 			vd = ui.item[0].id;
 		},
 		stop: function(event, ui) {
+			$("#udbt").show();
 			dropzone.style.display = "none";
 			let new_index = ui.item.index();
 			let old_index = coinl.indexOf(vd);
+
 			for (let i = 0; i < dellist.length; i++) {
 				array_move(eval(dellist[i]), old_index, new_index);
 			}
@@ -225,75 +341,16 @@ function init() {
 		}
 	});
 
-	function clock() {
-		$(".your-clock").FlipClock(timeclock, {
-			clockFace: "MinuteCounter",
-			clockFaceOptions: {
-				countdown: true
-			},
-			onStart: function() {},
-			onStop: function() {
-				$(".your-clock").hide();
-				$("#your_loading").show();
-
-				let o = 0;
-
-				function la() {
-					if (o == 17) {
-						return;
-					} else {
-						document.getElementById("r" + o).style.display = "none";
-
-						document.getElementById("r" + (o + 1)).style.display = "block";
-					}
-					o++;
-					requestAnimationFrame(la);
-				}
-				requestAnimationFrame(la);
-
-				load_process();
-
-				setTimeout(function() {
-					hide();
-					if (document.getElementById("edi").checked) {
-						$(".numin").prop("disabled", false);
-						$(".numin").css({
-							color: "black",
-							"background-color": "white",
-							"border-style": "solid"
-						});
-						if (view == "big") {
-							$(".tt2").show();
-							$(".tt4").show();
-							$(".tt5").show();
-						}
-
-						if (view == "list") {
-							$("td:nth-child(" + $("#amount").prop("value") + ")").show();
-							$("td:nth-child(" + $("#byp").prop("value") + ")").show();
-							$("td:nth-child(" + $("#alert").prop("value") + ")").show();
-						}
-						$(".ddbt").show();
-					}
-					$(".your-clock").show();
-					$("#your_loading").hide();
-					document.getElementById("r" + o).style.display = "none";
-					$("#r17").hide();
-					clock();
-				}, 17000);
-			}
-		});
-	}
-	clock();
+	$("#exampleModal").on("shown.bs.modal", function() {
+		$(document).off("focusin.modal");
+	});
 
 	$("#exampleModal").on("hidden.bs.modal", function() {
 		$("#loading").show();
 		$("#allcont").hide();
 		setTimeout(function() {
-			clearload();
-			if (view == "list") {
-				window.resizeTo($("#mtr").width() + 20, $(document).height() + 76);
-			}
+			location.reload();
+
 			$("#loading").hide();
 			$("#allcont").show();
 		}, 1);
@@ -393,7 +450,85 @@ function init() {
 	});
 }
 
-function array_move(arr, old_index, new_index) {
+let startMouseMove = function() {
+	$("#slimall").mousemove(function(e) {
+		e = e || window.event;
+		var cursor = { y: 0 };
+		cursor.y = e.pageY; //Cursor YPos
+		var papaWindow = parent.window;
+		var $pxFromTop = $(papaWindow).scrollTop();
+
+		var $userScreenHeight = $(papaWindow).height();
+
+		if (cursor.y > ($userScreenHeight + $pxFromTop) / 1.25) {
+			if ($pxFromTop < $userScreenHeight * 3.2) {
+				papaWindow.scrollBy(0, $userScreenHeight / 30);
+			}
+		} else if (cursor.y < ($userScreenHeight + $pxFromTop) * 0.75) {
+			papaWindow.scrollBy(0, -($userScreenHeight / 30));
+		}
+	});
+};
+
+window.clock = function() {
+	$(".your-clock").FlipClock(timeclock, {
+		clockFace: "MinuteCounter",
+		clockFaceOptions: {
+			countdown: true
+		},
+		onStart: function() {},
+		onStop: function() {
+			$(".your-clock").hide();
+			$("#your_loading").show();
+
+			load_process();
+		}
+	});
+};
+
+window.go = function() {
+	hide();
+	if (document.getElementById("edi").checked) {
+		$(".numin").prop("disabled", false);
+		$(".numin").css({
+			color: "black",
+			"background-color": "white",
+			"border-style": "solid"
+		});
+		if (view == "big") {
+			$(".tt2").show();
+			$(".tt4").show();
+			$(".tt5").show();
+		}
+
+		$(".ddbt").show();
+	}
+	$(".your-clock").show();
+	$("#your_loading").hide();
+
+	clock();
+};
+
+function topnavhs() {
+	$("#topnav").fadeOut();
+	if (nop > 1) {
+		$("#psw2").fadeIn();
+	}
+
+	$(".dbtn").show();
+	obj["Nav_show"] = 0;
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+}
+
+function topnavend() {
+	$("#topnav").fadeIn();
+	$("#psw2").hide();
+	$(".dbtn").hide();
+	obj["Nav_show"] = 1;
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+}
+
+window.array_move = function(arr, old_index, new_index) {
 	if (new_index >= arr.length) {
 		var k = new_index - arr.length + 1;
 		while (k--) {
@@ -402,16 +537,28 @@ function array_move(arr, old_index, new_index) {
 	}
 	arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
 	return arr;
-}
+};
 
 function listtoinput(id, value) {
 	if (id == "wahrungx" || id == "wahrungin") {
-		console.log();
 		if (wahrung.indexOf(value) >= 0) {
 		} else {
 			swal("Please choose valid currency");
 			return;
 		}
+		let old_posi = curr.fiat_name.indexOf(fiatl);
+		let old_price = curr.fiat_price[old_posi];
+		let new_posi = curr.fiat_name.indexOf(value);
+		let new_price = curr.fiat_price[new_posi];
+		for (let i = 0; i < coinl.length; i++) {
+			if (coinbp[i] != 0) {
+				coinbp[i] = ((coinbp[i] / old_price) * new_price).toString();
+			}
+			if (coinal[i] != 0) {
+				coinal[i] = ((parseInt(coinal[i]) / old_price) * new_price).toString();
+			}
+		}
+
 		$("#wahrungin").val(value);
 		let a = $("#wahrungin").val();
 		obj["Portfolio" + firstview]["Fix_Currency"] = a;
@@ -431,11 +578,7 @@ function httpGet(theUrl) {
 	xmlHttp.open("GET", theUrl, false);
 
 	xmlHttp.send(null);
-	if (xmlHttp.status == 429) {
-		swal(
-			"Your CoinMarketCap.com API LIMIT is reached!<br>Reset your internet connection to get a new IP<br>or wait some time..<br>and restart programm"
-		);
-	}
+
 	if (xmlHttp.status == 404) {
 		swal({
 			title: "Error in config.json",
@@ -464,6 +607,7 @@ window.loadall = function() {
 
 	if (parseInt(nop) > 1) {
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 		document.getElementById("psw").style.display = "block";
 	} else {
 		document.getElementById("psw").style.display = "none";
@@ -586,6 +730,7 @@ window.loadall = function() {
 			}
 		}
 		filler();
+
 		load(
 			coinl[i],
 			bil[i],
@@ -647,11 +792,78 @@ function load(
 	btcbb2,
 	als
 ) {
+	if (roundup == 0) {
+		c1h = Math.round(c1h * 1) / 1;
+		c24h = Math.round(c24h * 1) / 1;
+		c7d = Math.round(c7d * 1) / 1;
+	}
+
+	if (cbp == "0") {
+		cap = "0";
+		mon = 0;
+	} else {
+		if (parseInt(cbp) < 1) {
+			if (roundup == 0) {
+				cbp = cbp.slice(0, ffn(cbp) + 1);
+			} else {
+			}
+		} else {
+			if (roundup == 0) {
+				cbp = cbp.slice(0, cbp.indexOf("."));
+			} else {
+				cbp = cbp.slice(0, cbp.indexOf(".") + 3);
+			}
+		}
+		mon = parseFloat(cam) * coinpricetemp - parseFloat(cam) * parseFloat(cbp);
+		capit.push(mon.toString());
+		cap = parseFloat(capit[capit.length - 1]).toLocaleString(undefined, {
+			maximumFractionDigits: roundup
+		});
+	}
+
+	if (cal == "0") {
+		cal2 = "0";
+	} else {
+		if (parseInt(cal) < 1) {
+			if (roundup == 0) {
+				cal2 = cal.slice(0, ffn(cal) + 1);
+			} else {
+				cal2 = cal;
+			}
+		} else {
+			if (roundup == 0) {
+				cal2 = cal.slice(0, cal.indexOf("."));
+			} else {
+				cal2 = cal.slice(0, cal.indexOf(".") + 3);
+			}
+		}
+	}
+
+	let plin = (parseFloat(cam) * coinpricetemp).toLocaleString(undefined, {
+		maximumFractionDigits: roundup
+	});
+
+	if (cam == "0") {
+	} else {
+		if (parseInt(cam) < 1) {
+			if (roundup == 0) {
+				cam = cam.slice(0, ffn(cam) + 1);
+			} else {
+			}
+		} else {
+			if (roundup == 0) {
+				cam = cam.slice(0, cam.indexOf("."));
+			} else {
+				cam = cam.slice(0, cam.indexOf(".") + 3);
+			}
+		}
+	}
+
 	if (glob > 999999999) {
 		document.getElementById("glob").innerHTML =
 			"GM: " +
 			(Math.round(MoneyFormat(glob) * 100) / 100).toLocaleString(undefined, {
-				maximumFractionDigits: 2
+				maximumFractionDigits: roundup
 			}) +
 			" B " +
 			fiatk;
@@ -659,7 +871,7 @@ function load(
 		document.getElementById("glob").innerHTML =
 			"GM: " +
 			(Math.round(MoneyFormat(glob) * 100) / 100).toLocaleString(undefined, {
-				maximumFractionDigits: 2
+				maximumFractionDigits: roundup
 			}) +
 			" M " +
 			fiatk;
@@ -669,42 +881,42 @@ function load(
 		coinprice = (Math.round(coinpricetemp * 100) / 100).toLocaleString(
 			undefined,
 			{
-				maximumFractionDigits: 2
+				maximumFractionDigits: roundup
 			}
 		);
 	} else {
+		if (roundup == 2) {
+			btcround = 6;
+		} else {
+			btcround = ffn(coinpricetemp) - 1;
+		}
 		coinprice = (Math.round(coinpricetemp * 1000000) / 1000000).toLocaleString(
 			undefined,
-			{ minimumFractionDigits: 6 }
+			{
+				minimumFractionDigits: btcround
+			}
 		);
 	}
+
 	let e = (Math.round(MoneyFormat(cmtemp) * 100) / 100).toLocaleString(
 		undefined,
 		{
-			maximumFractionDigits: 2
+			maximumFractionDigits: roundup
 		}
 	);
 	if (cmtemp > 999999) {
-		cm = e + " M " + fiatk;
+		cm = e + " M ";
 	}
 	if (cmtemp > 999999999) {
-		cm = e + " B " + fiatk;
+		cm = e + " B ";
 	}
 	if (cmtemp <= 999999) {
-		cm = e + " T " + fiatk;
+		cm = e + " T ";
 	}
 	if (cmtemp <= 999) {
-		cm = e + " " + fiatk;
+		cm = e;
 	}
-	let plin = (parseFloat(cam) * coinpricetemp).toLocaleString(undefined, {
-		maximumFractionDigits: 2
-	});
 
-	let mon = parseFloat(cam) * coinpricetemp - parseFloat(cam) * parseFloat(cbp);
-	capit.push(mon.toString());
-	cap = parseFloat(capit[capit.length - 1]).toLocaleString(undefined, {
-		maximumFractionDigits: 2
-	});
 	if (als == "<") {
 		grkl = "Smaller than";
 	} else {
@@ -754,6 +966,10 @@ function load(
 		}
 	}
 
+	if (parseInt(cap) < 0) {
+		cap = cap.toString().slice(1);
+	}
+
 	$("#bigsort").append(
 		"<div id=" +
 			coinlong +
@@ -761,9 +977,11 @@ function load(
 			coinlong +
 			" style='cursor:pointer'><table class=tt><tbody ><tr><td id='" +
 			coinlong +
-			"add' class='tt ' ></a> <img class=bil1 src=" +
+			"add' class='tt ' ></a> <img id='" +
+			coinlong +
+			"pic' class=bil1 src=" +
 			bil +
-			"><span id=" +
+			"></img><span id=" +
 			coinlong +
 			"ala class=w2>" +
 			coinlong +
@@ -778,25 +996,24 @@ function load(
 			"p><br><font style='position	: fix;' color=#FF8000>" +
 			coinprice +
 			" " +
-			fiatk +
 			"</font></span></td></tr></tbody></table><table ><tbody><tr class=tts><td class='tts tts2' id=" +
 			coinlong +
 			"1h ><a class=w2>1h&nbsp</a> <a style=color:" +
 			color(c1h) +
 			">" +
-			c1h +
+			check(c1h) +
 			"%</a></td>	<td class='tts tts3' id=" +
 			coinlong +
 			"24h><a class=w2>24h&nbsp </a> <a style=color:" +
 			color(c24h) +
 			">" +
-			c24h +
+			check(c24h) +
 			"%</td><td class='tts tts4' id=" +
 			coinlong +
 			"7d ><a class=w2>7d&nbsp </a> <a style=color:" +
 			color(c7d) +
 			">" +
-			c7d +
+			check(c7d) +
 			"%</td></tr></tbody></table><table class=tt><tbody><tr class=tt><td style=color:white; class=ttu id=" +
 			coinlong +
 			"mAll>Market<br>" +
@@ -822,84 +1039,131 @@ function load(
 			"',this.value) onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
 			(cal.length + 1) * 15 +
 			"px;'  disabled=true  value=" +
-			cal +
+			cal2 +
 			"></input></td><td style=color:white; class='tt tt3' >Profit<a class=" +
 			coinlong +
 			"cap> <br>" +
 			cap +
-			fiatk +
 			"</td><td style=color:white; class='tt profit' >Capital<a class=" +
 			coinlong +
 			"pl> <br>" +
 			plin +
-			fiatk +
 			"</td></tr></tbody></table></div>"
 	);
 	$("#slim").append(
-		"<tr class=delrow id=" +
-			coinlong +
-			" style='cursor:pointer'><td scope=row >" +
-			rank +
-			"</td><td><img src=" +
-			bil +
-			" width=16px height=16px></img>&nbsp;" +
-			coinshort +
-			"</td><td style=color:orange;>" +
-			coinprice +
-			"</td><td>" +
-			cm +
-			"</td><td><a class=tg-lqy6 style= color:grey>" +
-			btcb2 +
-			"</a><a style= color:burlywood;>" +
-			btcbb2 +
-			"</a></td><td><a style=color:" +
-			color(c1h) +
-			">" +
-			c1h +
-			"</a></td><td><a style=color:" +
-			color(c24h) +
-			">" +
-			c24h +
-			"</td><td><a style=color:" +
-			color(c7d) +
-			">" +
-			c7d +
-			"</td><td><input type=number class=numin onkeyup=coinam[coinl.indexOf('" +
-			coinlong +
-			"')]=this.value; onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
-			(cam.length + 1) * 15 +
-			"px;'  disabled=true  value=" +
-			cam +
-			"></input></td><td><input type=number class=numin onkeyup=coinbp[coinl.indexOf('" +
-			coinlong +
-			"')]=this.value; onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
-			(cbp.length + 1) * 15 +
-			"px;'  disabled=true  value=" +
-			cbp +
-			"></input></td><td>" +
-			dda +
-			"<a>" +
-			vorz +
-			"</a><input type=number class=numin onkeyup=inal('" +
-			coinlong +
-			"',this.value) onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
-			(cal.length + 1) * 15 +
-			"px;'  disabled=true  value=" +
-			cal +
-			"></input></td><td><a class=" +
-			coinlong +
-			"cap>" +
-			cap +
-			fiatk +
-			"</td><td style='color:white;' class='tt profit' ><a class=" +
-			coinlong +
-			"pl>" +
-			plin +
-			fiatk +
-			"</td>" +
-			listala +
-			"</tr>"
+		"<tr class=delrow id='" + coinlong + "maintr' style='cursor:pointer'></tr>"
 	);
+
+	for (let v = 0; v < colorder.length; v++) {
+		if (colorder[v] == "thrank") {
+			$("#" + coinlong + "maintr").append("<td scope=row >" + rank + "</td>");
+		}
+		if (colorder[v] == "thcoin") {
+			$("#" + coinlong + "maintr").append(
+				"<td><img src=" +
+					bil +
+					" width=16px height=16px id='" +
+					coinlong +
+					"pic1'></img>&nbsp;" +
+					coinshort +
+					"</td>"
+			);
+		}
+		if (colorder[v] == "lp") {
+			$("#" + coinlong + "maintr").append(
+				"<td style=color:orange;>" + coinprice + "</td>"
+			);
+		}
+		if (colorder[v] == "mp") {
+			$("#" + coinlong + "maintr").append("<td>" + cm + "</td>");
+		}
+		if (colorder[v] == "thbtc") {
+			$("#" + coinlong + "maintr").append(
+				"<td><a class=tg-lqy6 style= color:grey>" +
+					btcb2 +
+					"</a><a style= color:burlywood;>" +
+					btcbb2 +
+					"</a></td>"
+			);
+		}
+		if (colorder[v] == "th1h") {
+			$("#" + coinlong + "maintr").append(
+				"<td><a style=color:" + color(c1h) + ">" + check(c1h) + "</a></td>"
+			);
+		}
+		if (colorder[v] == "th24h") {
+			$("#" + coinlong + "maintr").append(
+				"<td><a style=color:" + color(c24h) + ">" + check(c24h) + "</td>"
+			);
+		}
+		if (colorder[v] == "th7d") {
+			$("#" + coinlong + "maintr").append(
+				"<td><a style=color:" + color(c7d) + ">" + check(c7d) + "</td>"
+			);
+		}
+		if (colorder[v] == "thamount") {
+			$("#" + coinlong + "maintr").append(
+				"<td><input type=number class=numin onkeyup=coinam[coinl.indexOf('" +
+					coinlong +
+					"')]=this.value; onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
+					(cam.length + 1) * 15 +
+					"px;'  disabled=true  value=" +
+					cam +
+					"></input></td>"
+			);
+		}
+		if (colorder[v] == "thpricebuy") {
+			$("#" + coinlong + "maintr").append(
+				"<td><input type=number class=numin onkeyup=coinbp[coinl.indexOf('" +
+					coinlong +
+					"')]=this.value; onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
+					(cbp.length + 1) * 15 +
+					"px;'  disabled=true  value=" +
+					cbp +
+					"></input></td>"
+			);
+		}
+		if (colorder[v] == "thalert") {
+			$("#" + coinlong + "maintr").append(
+				"<td>" +
+					dda +
+					"<a>" +
+					vorz +
+					"</a><input type=number class=numin onkeyup=inal('" +
+					coinlong +
+					"',this.value) onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
+					(cal.length + 1) * 15 +
+					"px;'  disabled=true  value=" +
+					cal2 +
+					"></input></td>"
+			);
+		}
+		if (colorder[v] == "pp") {
+			$("#" + coinlong + "maintr").append(
+				"<td><a class=" + coinlong + "cap >" + cap + "</td>"
+			);
+		}
+		if (colorder[v] == "cp") {
+			$("#" + coinlong + "maintr").append(
+				"<td style='color:white;' class='tt profit' ><a class=" +
+					coinlong +
+					"pl>" +
+					plin +
+					"</td>"
+			);
+		}
+	}
+	$("#" + coinlong + "maintr").append(listala);
+	if (view == "list") {
+		document.getElementById(coinlong + "pic1").onerror = function() {
+			document.getElementById(coinlong + "pic1").src = "errp.png";
+		};
+	}
+	if (view == "big") {
+		document.getElementById(coinlong + "pic").onerror = function() {
+			document.getElementById(coinlong + "pic").src = "errp.png";
+		};
+	}
 
 	if (cam == "0" || cam == "") {
 	} else {
@@ -924,6 +1188,10 @@ function load(
 		}
 	}
 
+	if (cap == "0") {
+		$("." + coinlong + "cap").css("color", "white");
+	}
+
 	total = 0;
 	$.each(capit, function() {
 		total += parseFloat(this);
@@ -937,6 +1205,13 @@ function load(
 		}
 		$(".sortable:nth-child(odd)").css("background-color", "#1b2433");
 	}
+}
+
+function check(input) {
+	if (input < 0) {
+		input = input.toString().slice(1);
+	}
+	return input;
 }
 
 let flagpl = 1;
@@ -955,11 +1230,13 @@ function plload() {
 		for (let i = 0; i < pl.length; i++) {
 			plall = plall + pl[i];
 		}
+
 		$("#alles").html(
 			"Capital: " +
 				plall.toLocaleString(undefined, {
-					maximumFractionDigits: 2
+					maximumFractionDigits: roundup
 				}) +
+				" " +
 				fiatk
 		);
 		plall = 0;
@@ -969,7 +1246,7 @@ function plload() {
 		$("#alles").html(
 			"Profit: " +
 				total.toLocaleString(undefined, {
-					maximumFractionDigits: 2
+					maximumFractionDigits: roundup
 				}) +
 				" " +
 				fiatk
@@ -978,6 +1255,7 @@ function plload() {
 }
 
 function plchange() {
+	console.log("cl");
 	if (flagpl == 0) {
 		flagpl = 1;
 		obj["Profit_Capital"] = flagpl;
@@ -1115,16 +1393,14 @@ function hide() {
 	}
 
 	for (let i = 0; i < catnames.length; i++) {
-		$("#" + catnames[i]).prop("checked", category[catnames[i]]);
 		if (category[catnames[i]] == false) {
-			$("td:nth-child(" + $("#" + catnames[i]).prop("value") + ")").hide();
+			$("#" + catnames[i]).prop("checked", false);
 		}
 		if (category[catnames[i]] == true) {
-			$("td:nth-child(" + $("#" + catnames[i]).prop("value") + ")").show();
+			$("#" + catnames[i]).prop("checked", true);
 		}
 	}
 }
-
 window.first = function() {
 	try {
 		cf = fs.readFileSync("config.json");
@@ -1165,6 +1441,7 @@ window.first = function() {
 		obj = JSON.parse(cf);
 		let loadjson = obj;
 		firstview = loadjson.First_View_Portfolio;
+
 		nop = eval("loadjson.Number_of_Portfolio");
 		coinl = eval("loadjson.Portfolio" + firstview + ".Coins");
 		coink = eval("loadjson.Portfolio" + firstview + ".Coinshort");
@@ -1176,6 +1453,45 @@ window.first = function() {
 		view = eval("loadjson.Portfolio" + firstview + ".View");
 		category = eval("loadjson.Portfolio" + firstview + ".Category");
 
+		if (Object.keys(category).length < 12) {
+			obj["Portfolio" + firstview]["Category"] = Portfolio1.Category;
+			category = Portfolio1.Category;
+		}
+		try {
+			roundup = eval("loadjson.Point_numbers");
+			if (roundup == undefined) {
+				roundup = 2;
+			}
+			if (eval("loadjson.Nav_show") == 0) {
+				topnavhs();
+			}
+
+			if (roundup == 0) {
+				document.getElementById("checkBox").checked = true;
+			}
+
+			colorder = eval("loadjson.Portfolio" + firstview + ".Column_order");
+
+			if (colorder == undefined) {
+				colorder = allcolid;
+				for (let i = 0; i < catnames.length; i++) {
+					if (category[catnames[i]] == false) {
+						category[catnames[i]] = true;
+					}
+				}
+			}
+
+			document.getElementById("mtr2").innerHTML = "";
+			for (let i = 0; i < colorder.length; i++) {
+				for (let o = 0; o < allcolid.length; o++) {
+					if (colorder[i] == allcolid[o]) {
+						document.getElementById("mtr2").innerHTML += allcol[o];
+					}
+				}
+			}
+			fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+		} catch (e) {}
+
 		for (let i = 1; i - 1 < nop; i++) {
 			$("#allportin").append(
 				"<th><div ><label class=switch><input class=portf id=" +
@@ -1186,7 +1502,7 @@ window.first = function() {
 			);
 		}
 		$("#forbutton").append(
-			"<button onclick=newportf() type=button class=btnnew>+</button><button onclick=delportf() type=button style=background:red class=btnnew>-</button>"
+			"<button onclick=newportf() type=button class=btnnew>+</button><button onclick=delportf() type=button style=background:red class=btnnew>-</button><button onclick=dupli() type=button style=background:blue class=btnnew>&#10064;</button>"
 		);
 		if (alsize == undefined || alsize.length == 0) {
 			for (let i = 0; i < coinl.length; i++) {
@@ -1202,9 +1518,10 @@ window.first = function() {
 		}
 		fiatk = fiatl.substring(fiatl.search(":") + 1, fiatl.length);
 		wa = fiatl.substring(0, fiatl.search(":")).toLowerCase();
-		$("#lp").html("Price " + fiatk);
+
 		$("#" + firstview).prop("checked", true);
 		$("#wahrungin").val(fiatl);
+		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 	} catch (e) {
 		if (
 			e == "TypeError: Cannot set property '0' of undefined" ||
@@ -1263,6 +1580,7 @@ window.first = function() {
 						capital: true,
 						profit: true
 					};
+
 					try {
 						fs.writeFileSync(
 							"config.json",
@@ -1299,14 +1617,44 @@ window.first = function() {
 	}
 };
 
+function dupli() {
+	swal({
+		title: "Select portfolio to clone",
+		html: "<input id=copy type=number></input>",
+		showCancelButton: true,
+		confirmButtonText: "Duplicate",
+		showLoaderOnConfirm: true
+	}).then(result => {
+		if (result.value) {
+			if (
+				$("#copy").val() > nop ||
+				$("#copy").val() == 0 ||
+				$("#copy")
+					.val()
+					.toString()
+					.indexOf(".") > 0 ||
+				$("#copy")
+					.val()
+					.toString()
+					.indexOf(",") > 0
+			) {
+				swal("Wrong input!");
+			} else {
+				let over = fs.readFileSync("config.json");
+				let loadjson = JSON.parse(over);
+				let i = parseFloat(eval("loadjson.Number_of_Portfolio")) + 1;
+				let b = parseFloat(nop) + 1;
+				obj["Portfolio" + i] = obj["Portfolio" + $("#copy").val()];
+				obj["Number_of_Portfolio"] = b.toString();
+				fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+				localload();
+			}
+		}
+	});
+}
+
 function ed() {
 	if (document.getElementById("edi").checked) {
-		$(".numin").prop("disabled", false);
-		$(".numin").css({
-			color: "black",
-			"background-color": "white",
-			"border-style": "solid"
-		});
 		if (view == "big") {
 			$(".tt2").show();
 			$(".tt4").show();
@@ -1314,11 +1662,59 @@ function ed() {
 		}
 
 		if (view == "list") {
-			$("td:nth-child(" + $("#amount").prop("value") + ")").show();
-			$("td:nth-child(" + $("#byp").prop("value") + ")").show();
-			$("td:nth-child(" + $("#alert").prop("value") + ")").show();
+			if (category.amount == false) {
+				$("#mtr2").append(allcol[8]);
+				for (let i = 0; i < coinl.length; i++) {
+					$("#" + coinl[i] + "maintr").append(
+						"<td><input type=number class=numin onkeyup=coinam[coinl.indexOf('" +
+							coinl[i] +
+							"')]=this.value; onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
+							(coinam[i].length + 1) * 15 +
+							"px;'  disabled=true  value=" +
+							coinam[i] +
+							"></input></td>"
+					);
+				}
+			}
+			if (category.byp == false) {
+				$("#mtr2").append(allcol[9]);
+				for (let i = 0; i < coinl.length; i++) {
+					$("#" + coinl[i] + "maintr").append(
+						"<td><input type=number class=numin onkeyup=coinbp[coinl.indexOf('" +
+							coinl[i] +
+							"')]=this.value; onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
+							(coinbp[i].length + 1) * 15 +
+							"px;'  disabled=true  value=" +
+							coinbp[i] +
+							"></input></td>"
+					);
+				}
+			}
+			if (category.alert == false) {
+				$("#mtr2").append(allcol[10]);
+				for (let i = 0; i < coinl.length; i++) {
+					$("#" + coinl[i] + "maintr").append(
+						"<td>" +
+							dda +
+							"<a>" +
+							vorz +
+							"</a><input type=number class=numin onkeyup=inal('" +
+							coinl[i] +
+							"',this.value) onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
+							(coinal[i].length + 1) * 15 +
+							"px;'  disabled=true  value=" +
+							coinal[i] +
+							"></input></td>"
+					);
+				}
+			}
 		}
-
+		$(".numin").prop("disabled", false);
+		$(".numin").css({
+			color: "black",
+			"background-color": "white",
+			"border-style": "solid"
+		});
 		$(".ddbt").show();
 	} else {
 		$(".numin").prop("disabled", true);
@@ -1374,12 +1770,13 @@ function porttog(id) {
 }
 
 window.clearload = function() {
-	if (cc == 6) {
+	if (cc == 10) {
 		location.reload();
 		cc = 0;
 	} else {
 		cc++;
 	}
+
 	$("#cn,#allportin,#forbutton,#glob").html("");
 
 	capit.length = 0;
@@ -1393,10 +1790,20 @@ window.clearload = function() {
 
 	first();
 	loadall();
-
+	load_js();
 	$("#loading").hide();
 	$("#allcont").show();
 };
+
+function npn(checked) {
+	if (checked) {
+		roundup = 0;
+	} else {
+		roundup = 2;
+	}
+	obj["Point_numbers"] = roundup;
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+}
 
 function newportf() {
 	let over = fs.readFileSync("config.json");
@@ -1407,6 +1814,27 @@ function newportf() {
 	obj["Number_of_Portfolio"] = b.toString();
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 	localload();
+}
+
+function ffn(string) {
+	let bt = string.toString();
+
+	for (let o = 0; o < bt.length; o++) {
+		if (
+			bt.charAt(o) == "1" ||
+			bt.charAt(o) == "2" ||
+			bt.charAt(o) == "3" ||
+			bt.charAt(o) == "4" ||
+			bt.charAt(o) == "5" ||
+			bt.charAt(o) == "6" ||
+			bt.charAt(o) == "7" ||
+			bt.charAt(o) == "8" ||
+			bt.charAt(o) == "9"
+		) {
+			return o;
+			break;
+		}
+	}
 }
 
 function localload() {
@@ -1424,34 +1852,44 @@ function localload() {
 }
 
 function delportf() {
-	if (nop == 1) {
-		swal("You need at least one portfolio");
-		return;
-	}
 	swal({
-		title: "Are you sure?",
-		html:
-			"You won't be able to revert this! Your complete <b>Portfolio " +
-			nop +
-			"</b> would be deleted!",
-		type: "warning",
-
+		title: "Select portfolio to delete",
+		html: "<input id=delpo type=number></input>",
 		showCancelButton: true,
-		confirmButtonColor: "#3085d6",
-		cancelButtonColor: "#d33",
-		confirmButtonText: "Yes, delete it!"
+		confirmButtonText: "Delete",
+		showLoaderOnConfirm: true
 	}).then(result => {
 		if (result.value) {
-			let over = fs.readFileSync("config.json");
-			let loadjson = JSON.parse(over);
-			let i = parseFloat(eval("loadjson.Number_of_Portfolio"));
-
-			let b = parseFloat(nop) - 1;
-			delete obj["Portfolio" + i];
-			obj["Number_of_Portfolio"] = b.toString();
-			obj["First_View_Portfolio"] = b.toString();
-			fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
-			localload();
+			if (nop == "1") {
+				swal("You need at least one portfolio");
+			}
+			if (
+				parseInt($("#delpo").val()) > parseInt(nop) ||
+				parseInt($("#delpo").val()) <= 0
+			) {
+				swal("Wrong input!");
+			} else {
+				let a = $("#delpo")
+					.val()
+					.toString();
+				if (a == nop) {
+					delete obj["Portfolio" + a];
+				} else {
+					delete obj["Portfolio" + a];
+					for (let i = parseInt(a); i < parseInt(nop); i++) {
+						let b = obj["Portfolio" + (i + 1)];
+						delete obj["Portfolio" + (i + 1)];
+						obj["Portfolio" + i] = b;
+					}
+				}
+				obj["Number_of_Portfolio"] = (parseInt(nop) - 1).toString();
+				nop--;
+				obj["Number_of_Portfolio"] = nop.toString();
+				firstview = nop;
+				obj["First_View_Portfolio"] = nop.toString();
+				fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+				localload();
+			}
 		}
 	});
 }
@@ -1463,7 +1901,19 @@ function savesingle(portfolio, id, arr, posi) {
 
 function catsave(id, value) {
 	category[catnames[catnames.indexOf(id)]] = $("#" + id).prop("checked");
-	savesingle(firstview, "Category", "category", id);
+	if ($("#" + id).prop("checked") == false) {
+		colorder.splice(colorder.indexOf(value), 1);
+		obj["Portfolio" + firstview]["Column_order"] = colorder;
+		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+	}
+	if ($("#" + id).prop("checked") == true) {
+		if (colorder.indexOf(value) == -1) {
+			colorder.push(value);
+			obj["Portfolio" + firstview]["Column_order"] = colorder;
+
+			fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+		}
+	}
 }
 
 function save(i) {
@@ -1651,6 +2101,7 @@ function nextportf() {
 		clearload();
 
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 	} else {
 		firstview = (parseInt(firstview) + 1).toString();
 		obj.First_View_Portfolio = firstview;
@@ -1659,6 +2110,7 @@ function nextportf() {
 		clearload();
 
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 	}
 }
 
@@ -1671,6 +2123,7 @@ function bevorportf() {
 		clearload();
 
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 	} else {
 		firstview = (parseInt(firstview) - 1).toString();
 		obj.First_View_Portfolio = firstview;
@@ -1679,5 +2132,24 @@ function bevorportf() {
 		clearload();
 
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 	}
 }
+
+function load_js() {
+	var head = document.getElementsByTagName("head")[0];
+	var script = document.createElement("script");
+	script.src = "dragtable.js";
+	head.appendChild(script);
+}
+
+window.colsave = function() {
+	var IDs = [];
+	$("#mtr2")
+		.find("th")
+		.each(function() {
+			IDs.push(this.id);
+		});
+	obj["Portfolio" + firstview]["Column_order"] = IDs;
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+};

@@ -34,6 +34,7 @@ app.on("ready", function() {
 		y: mainWindowState.y,
 		width: mainWindowState.width,
 		height: mainWindowState.height
+		
 	});
 	win.loadURL(
 		url.format({
@@ -41,9 +42,9 @@ app.on("ready", function() {
 			protocol: "file:",
 			slashes: true,
 			
-		})
+		}),{"extraHeaders" : "pragma: no-cache\n"}
 	);
-	
+
 	// Let us register listeners on the window, so we can update the state
 	// automatically (the listeners will be removed when the window is closed)
 	// and restore the maximized or full screen state
