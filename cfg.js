@@ -821,24 +821,6 @@ function load(
 		});
 	}
 
-	if (cal == "0") {
-		cal2 = "0";
-	} else {
-		if (parseInt(cal) < 1) {
-			if (roundup == 0) {
-				cal2 = cal.slice(0, ffn(cal) + 1);
-			} else {
-				cal2 = cal;
-			}
-		} else {
-			if (roundup == 0) {
-				cal2 = cal.slice(0, cal.indexOf("."));
-			} else {
-				cal2 = cal.slice(0, cal.indexOf(".") + 3);
-			}
-		}
-	}
-
 	let plin = (parseFloat(cam) * coinpricetemp).toLocaleString(undefined, {
 		maximumFractionDigits: roundup
 	});
@@ -962,7 +944,11 @@ function load(
 	if (view == "list") {
 		if (parseFloat(cal) > 0) {
 			listala =
-				"<td><a title='@" + coinprice + als + cal + "'>&#x1f514;</a></td>";
+				"<td id='aler'><a title='@" +
+				coinprice +
+				als +
+				cal +
+				"'>&#x1f514;</a></td>";
 		}
 	}
 
@@ -1039,7 +1025,7 @@ function load(
 			"',this.value) onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
 			(cal.length + 1) * 15 +
 			"px;'  disabled=true  value=" +
-			cal2 +
+			cal +
 			"></input></td><td style=color:white; class='tt tt3' >Profit<a class=" +
 			coinlong +
 			"cap> <br>" +
@@ -1125,7 +1111,7 @@ function load(
 		}
 		if (colorder[v] == "thalert") {
 			$("#" + coinlong + "maintr").append(
-				"<td>" +
+				"<td >" +
 					dda +
 					"<a>" +
 					vorz +
@@ -1134,7 +1120,7 @@ function load(
 					"',this.value) onkeydown=this.style.width=((this.value.length+1)*15)+'px' style='text-align: center;width:" +
 					(cal.length + 1) * 15 +
 					"px;'  disabled=true  value=" +
-					cal2 +
+					cal +
 					"></input></td>"
 			);
 		}
@@ -1200,7 +1186,7 @@ function load(
 	if (view == "big") {
 		if (parseFloat(cal) > 0) {
 			$("#" + coinlong + "ala").append(
-				"<a title='@" + coinprice + vorz + cal + "'>&#x1f514;</a>"
+				"<a  title='@" + coinprice + vorz + cal + "'>&#x1f514;</a>"
 			);
 		}
 		$(".sortable:nth-child(odd)").css("background-color", "#1b2433");
@@ -1655,6 +1641,7 @@ function dupli() {
 
 function ed() {
 	if (document.getElementById("edi").checked) {
+		$("#aler").hide();
 		if (view == "big") {
 			$(".tt2").show();
 			$(".tt4").show();
