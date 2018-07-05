@@ -1,6 +1,6 @@
 {
   "name": "Desktop-Coin-Tracker",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Desktop Coin Tracker",
   "main": "main.js",
   "scripts": {
@@ -30,6 +30,7 @@
     "flipclock": "^0.8.2",
     "jquery": "^3.3.1",
     "json-validator": "0.0.34",
+    "moment-timezone": "^0.5.21",
     "popper.js": "^1.14.3",
     "sweetalert2": "^7.19.1"
   }

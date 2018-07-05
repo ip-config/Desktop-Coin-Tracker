@@ -1,4 +1,5 @@
 const electron = require("electron");
+const {session} = require('electron')
 // Module to control application life.
 const app = electron.app;
 const windowStateKeeper = require("electron-window-state");
@@ -9,10 +10,19 @@ if (handleSquirrelEvent(app)) {
 	return;
 }
 
+
+ const _setImmediate = setImmediate
+  const _clearImmediate = clearImmediate
+  process.once('loaded', () => {
+    global.setImmediate = _setImmediate
+    global.clearImmediate = _clearImmediate
+  })
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-
+var startTime = Date.now();
+  
 
 const path = require("path");
 const url = require("url");
@@ -33,7 +43,9 @@ app.on("ready", function() {
 		x: mainWindowState.x,
 		y: mainWindowState.y,
 		width: mainWindowState.width,
-		height: mainWindowState.height
+		height: mainWindowState.height,
+		show: false,
+		backgroundColor: '#262626'
 		
 	});
 	win.loadURL(
@@ -42,15 +54,28 @@ app.on("ready", function() {
 			protocol: "file:",
 			slashes: true,
 			
-		}),{"extraHeaders" : "pragma: no-cache\n"}
+		})
 	);
 
+
+ 
+    setTimeout(function(){
+      win.show();      
+	  
+   
+    }, 1000);
+  
 	// Let us register listeners on the window, so we can update the state
 	// automatically (the listeners will be removed when the window is closed)
 	// and restore the maximized or full screen state
 	mainWindowState.manage(win);	
+	
+	
+	 
    
 });
+
+
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
 	// On OS X it is common for applications and their menu bar

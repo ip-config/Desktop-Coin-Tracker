@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title>Desktop Coin Tracker</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="offline.js"></script>
+
     <script>
 if (!navigator.onLine) {
 	alert("Please check your internet connection and restart!");
@@ -15,6 +18,7 @@ if (!navigator.onLine) {
     <script      src="https://code.jquery.com/jquery-3.3.1.js"      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="      crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 <script  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="  crossorigin="anonymous"></script>
+
 <script src="cfg.js"></script>
 <script src="load.js"></script>
 
@@ -27,15 +31,77 @@ if (!navigator.onLine) {
   <link rel="stylesheet" href="node_modules\flipclock\dist/flipclock.css">
   <script src="node_modules\flipclock\dist/flipclock.min.js"></script>
 <script src="dragtable.js"></script>
+<script src="jscolor.js"></script>
 
+<script>
+try {
+	JSON.parse(fs.readFileSync("last_update_check.json"));
+} catch (e) {
+	$.get(
+		"https://api.github.com/repos/Escaflownevan/Desktop-Coin-Tracker/releases",
+		function(data, status) {
+			var shell = require("electron").shell;
+			$(document).on("click", 'a[href^="http"]', function(event) {
+				event.preventDefault();
+				shell.openExternal(this.href);
+			});
+			act_ver = JSON.parse(fs.readFileSync("package.json"));
+			fs.writeFileSync(
+				"last_update_check.json",
+				JSON.stringify(Date.now(), null, 4),
+				"utf-8"
+			);
+
+			if (data[0].name > "v" + act_ver.version) {
+				swal({
+					title: "New Version is online!",
+					html:
+						"<a href=https://github.com/Escaflownevan/Desktop-Coin-Tracker/releases>Check here to update</a>",
+					confirmButtonText: "Ok"
+				});
+			}
+		}
+	);
+}
+last_time = JSON.parse(fs.readFileSync("last_update_check.json"));
+
+if (Date.now() > last_time + 3600000) {
+	$.get(
+		"https://api.github.com/repos/Escaflownevan/Desktop-Coin-Tracker/releases",
+		function(data, status) {
+			var shell = require("electron").shell;
+			$(document).on("click", 'a[href^="http"]', function(event) {
+				event.preventDefault();
+				shell.openExternal(this.href);
+			});
+			act_ver = JSON.parse(fs.readFileSync("package.json"));
+			fs.writeFileSync(
+				"last_update_check.json",
+				JSON.stringify(Date.now(), null, 4),
+				"utf-8"
+			);
+
+			if (data[0].name > "v" + act_ver.version) {
+				swal({
+					title: "New Version is online!",
+					html:
+						"<a href=https://github.com/Escaflownevan/Desktop-Coin-Tracker/releases>Check here to update</a>",
+					confirmButtonText: "Ok"
+				});
+			}
+		}
+	);
+} else {
+}
+</script>
 
 
   </head>
-  <body>
+  <body >
     <div id="loading">
 
 
-    <div id="prog" class="progress" style=" position:absolute;width:100%;top:55%">
+    <div id="prog" class="progress" style="position:absolute;width:100%;top:55%">
 
 </div>
 
@@ -45,7 +111,7 @@ if (!navigator.onLine) {
 
 </div>
 
-<div id="allcont" style="display:none;">
+<div id="allcont" style="display:none;" >
 <div >
 
     <nav id="topnav" class="navbar sticky-top navbar-dark bg-dark justify-content-between" style="width:100%!important;">
@@ -55,9 +121,9 @@ if (!navigator.onLine) {
 
         <input type="image"  data-toggle="modal" data-target="#exampleModal" src="./settings.png" width="50px"  />
         <div id="psw" style="display:none;">
-        <a  style="position:absolute; left: 80px; top: -8px;color:white;font-size:30px;cursor: pointer;" onclick="bevorportf()">&#8249;</a>
+<img src="backb.png" style="position:absolute;left: 75px; top: 8px;color:white;cursor: pointer;" onclick="bevorportf()"></img>
         <a id="portfnr" style="position:absolute; left: 93px; top: 3px;color:white;text-align:center;"></a>
-        <a style="position:absolute; left: 120px; top: -8px;color:white;font-size:30px;cursor: pointer;" onclick="nextportf()">&#8250;</a>
+    <img src="forw.png" style="position:absolute; left: 115px; top: 8px;color:white;font-size:30px;cursor: pointer;" onclick="nextportf()"></img>
       </div>
     <a  style="position:absolute; left: 90px; top: 27px;color:#5F9EA0	;">Edit</a>
       <label class="switchedit" style="position:absolute; left: 70px; top: 20px;">
@@ -71,18 +137,19 @@ if (!navigator.onLine) {
 <div class="loader" style="position:absolute;top:2px;left:0px">Loading...</div>
 <div style="position:absolute;top:2px;right:0px;color:white;font-size:12px">Loading<br>new<br> Data</div>
 </div>
-  <button type="button" class="udbtn" id="udbt" style="position:absolute; left:50%;top:50px" onclick="topnavhs()">	&#8593;</button>
+  <button type="button" class="udbtn" id="udbt" style="position:absolute; left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%);top:50px" onclick="topnavhs()">	&#8593;</button>
 </nav>
 <nav id="nav2" class="navbar navbar-dark bg-primary navbarcustom" style="width:100%; ">
-  <button type="button" class="udbtn dbtn"  style="display: none;position:absolute; left:50%;top:-5px" onclick="topnavend()">	&#8595;</button>
+  <button type="button" class="udbtn dbtn"  style="display: none;position:absolute; left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%);top:-5px" onclick="topnavend()">	&#8595;</button>
   <div class="container" >
 
 
         <a id="glob"  style="float: left;color: white; ">GM:&nbsp; </a>
-        <div id="psw2" style="position: absolute;left:49%;display:none;">
-        <a  style="  color:white;font-size:30px;cursor: pointer;" onclick="bevorportf()">&#8249;</a>
-        <a id="portfnr2" style=" color:white;text-align:center;"></a>
-        <a style=" color:white;font-size:30px;cursor: pointer;" onclick="nextportf()">&#8250;</a>
+        <div id="psw2" style="position:absolute;position:absolute; left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%); display:none;">
+  <img src="backb.png" style="cursor: pointer;" onclick="bevorportf()"></img>
+        <a id="portfnr2" style=" color:white;"></a>
+        <img src="forw.png" style="cursor: pointer;" onclick="nextportf()"></img>
+
       </div>
         <a id="alles" style="float: right;color: white;cursor: pointer;" onclick="plchange()" > </a>
 
@@ -93,7 +160,7 @@ if (!navigator.onLine) {
 
 
 
-<div class="bigsort" id="bigsort" style="height: 100%;overflow-y:auto!important;position:absolute;width:100%">
+<div class="bigsort" id="bigsort" >
 
     </div>
 
@@ -107,14 +174,9 @@ if (!navigator.onLine) {
     <div class="modal-content" style="background-color: white;">
       <a class="centered-text">Choose your Portfolio</a>
       <div class="modal-header">
-
-
-
             <div class="container" id="allport" style="overflow-x:auto !important;">
-
 <table class="table table-bordered " >
-  <thead>
-
+    <thead>
   <tr id="allportin"  >
 
 </tr>
@@ -138,6 +200,9 @@ if (!navigator.onLine) {
     </li>
     <li class="nav-item">
       <a class="nav-link" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="false">View</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="color-tab" data-toggle="tab" href="#color" role="tab" aria-controls="color" aria-selected="false">Colors</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" id="backup-tab" data-toggle="tab" href="#backup" role="tab" aria-controls="backup" aria-selected="false">Backup</a>
@@ -166,8 +231,8 @@ if (!navigator.onLine) {
               <input type="text" id="coinin" class="form-control autocomplete" placeholder="Coin Name.."></input>
 
                 <div class="input-group-prepend ">
-              <button type="button" class="btn btn-outline-success my-0 my-sm-0 topx" >Top X</button>
-              <input type="number" class="form-control " id="tx"></input>
+              <button type="button" class="btn btn-outline-success my-0 my-sm-0 topx "  >Top X</button>
+              <input type="number" class="form-control numeric" onkeydown=onlynum() id="tx"></input>
 
 
   </div>
@@ -217,7 +282,7 @@ if (!navigator.onLine) {
           </div>
 
 <li class="list-group-item" style="text-align: center !important;">
-<input id="checkBox" style="text-align: center !important;" type="checkbox" onclick="npn(checked)"><a style="text-align: center !important;">No point numbers(global)</a></input>
+<input id="checkBox" style="text-align: center !important;" type="checkbox" onclick="npn(checked)"><a style="text-align: center !important;">No point numbers (global)</a></input>
 
 </li>
           </li>
@@ -280,6 +345,15 @@ if (!navigator.onLine) {
 </li>
       </ul>
     </div>
+    <div class="tab-pane fade" id="color" role="tabpanel" aria-labelledby="color-tab" >
+      <br>
+      <ul id="colorlist" class="list-group">
+
+
+      </ul>
+      <br>
+<button type="button" class="btn btn-danger my-0 my-sm-0 " style="position: relative; left:40%; width: 100px" onclick="colorreset()">Default</button>
+    </div>
 <div class="tab-pane fade" id="backup" role="tabpanel" aria-labelledby="backup-tab">
   <br>
   <ul class="list-group">
@@ -294,7 +368,7 @@ if (!navigator.onLine) {
     <span class="close"></span>
         <!-- Modal content -->
         <div  class="modal-content">
-          <iframe src="readme.html" id="readme" name="targetframe" allowTransparency="true" scrolling="yes" frameborder="0" style="width:100%;height:580px">
+          <iframe src="readme.html" id="readme" name="targetframe" allowTransparency="true" scrolling="yes" frameborder="0" style="width:100%;height:570px">
               </iframe>
               <button class="close" onclick="	myModal2.style.display = 'none';">Exit</button>
     </div>
@@ -329,10 +403,10 @@ if (!navigator.onLine) {
 
 
 
-<div >
-  <table  class="table table-striped table-dark table-bordered table-hover table-sm draggable " id="slimall" style="height: 100%;overflow-y:auto!important;overflow-x: hidden;position: absolute;display:none;">
+<div id="slimtab" style="overflow-y: auto;overflow-x: hidden">
+  <table  class="table table-striped table-dark table-bordered table-hover table-sm slimall" id="slimall" style="overflow-y: auto !important;overflow-x: hidden;display:none;">
     <thead id="mtr" class="bg-danger" >
-      <tr id="mtr2" style='cursor:ew-resize'>
+      <tr id="mtr2" class="mtr2" >
 
 
       </tr>
