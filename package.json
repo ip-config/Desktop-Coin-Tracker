@@ -1,6 +1,6 @@
 {
   "name": "Desktop-Coin-Tracker",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Desktop Coin Tracker",
   "main": "main.js",
   "scripts": {
@@ -24,7 +24,6 @@
   "dependencies": {
     "JSV": "^4.0.2",
     "animate.css": "^3.6.1",
-    "bootstrap": "^4.1.0",
     "currency-symbol-map": "^4.0.4",
     "electron-window-state": "^4.1.1",
     "flipclock": "^0.8.2",

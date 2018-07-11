@@ -805,22 +805,6 @@ function load(
 		maximumFractionDigits: roundup
 	});
 
-	if (cam == "0") {
-	} else {
-		if (parseInt(cam) < 1) {
-			if (roundup == 0) {
-				cam = cam.slice(0, ffn(cam) + 1);
-			} else {
-			}
-		} else {
-			if (roundup == 0) {
-				cam = cam.slice(0, cam.indexOf("."));
-			} else {
-				cam = cam.slice(0, cam.indexOf(".") + 3);
-			}
-		}
-	}
-
 	if (glob > 999999999) {
 		document.getElementById("glob").innerHTML =
 			"GM: " +
@@ -852,6 +836,7 @@ function load(
 		} else {
 			btcround = ffn(coinpricetemp) - 1;
 		}
+
 		coinprice = (Math.round(coinpricetemp * 1000000) / 1000000).toLocaleString(
 			undefined,
 			{
@@ -1319,7 +1304,6 @@ function hidebig() {
 }
 
 function del(value) {
-	console.log(value);
 	let b = coinl.indexOf(value);
 	for (let i = 0; i < dellist.length; i++) {
 		let a = eval(dellist[i]);
@@ -1907,7 +1891,7 @@ function porttog(id) {
 const { webFrame } = require("electron");
 window.clearload = function() {
 	if (cc == 10) {
-		location.reload();
+			location.reload();
 		cc = 0;
 	} else {
 		cc++;
@@ -1963,6 +1947,7 @@ window.clearload = function() {
 			$("#slimall").show();
 		}
 	} catch (e) {}
+	$(".tvhover").css("pointer-events", "visible");
 	$("#loading").hide();
 	$("#allcont").show();
 };
@@ -2075,7 +2060,7 @@ function tv(coin) {
 		coin +
 		"/" +
 		"USD" +
-		' chart</span></a> by TradingView&nbsp;&nbsp;&nbsp;&nbsp;       USD is default fiat!<img src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a><img src="https://tradingview.go2cloud.org/aff_i?offer_id=2&file_id=292&aff_id=11778" width="1" height="1" /></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script> <script type="text/javascript">	  new TradingView.widget(	  {	  "width": 980,	  "height": 610,	  "symbol": "' +
+		' chart</span></a> by TradingView&nbsp;&nbsp;&nbsp;&nbsp;       USD is default fiat! Not all coins are listed on Tradingview<img style=cursor:pointer href="#" onclick=openext() rel="noopener" src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a><img src="https://tradingview.go2cloud.org/aff_i?offer_id=2&file_id=292&aff_id=11778" width="1" height="1" /></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script> <script type="text/javascript">	  new TradingView.widget(	  {	  "width": 980,	  "height": 610,	  "symbol": "' +
 		coin +
 		"USD" +
 		'",	 "interval": "D",	  "timezone": "' +
@@ -2409,7 +2394,7 @@ function nextportf() {
 
 		clearload();
 		$("#slimall").css("pointer-events", "none");
-		$(".bigsort").css("pointer-events", "none");
+
 		$(".tvhover").css("pointer-events", "visible");
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
 		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
@@ -2420,7 +2405,7 @@ function nextportf() {
 
 		clearload();
 		$("#slimall").css("pointer-events", "none");
-		$(".bigsort").css("pointer-events", "none");
+
 		$(".tvhover").css("pointer-events", "visible");
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
 		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
@@ -2435,7 +2420,6 @@ function bevorportf() {
 
 		clearload();
 		$("#slimall").css("pointer-events", "none");
-		$(".bigsort").css("pointer-events", "none");
 		$(".tvhover").css("pointer-events", "visible");
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
 		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
@@ -2446,8 +2430,6 @@ function bevorportf() {
 
 		clearload();
 		$("#slimall").css("pointer-events", "none");
-
-		$(".bigsort").css("pointer-events", "none");
 		$(".tvhover").css("pointer-events", "visible");
 		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
 		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
