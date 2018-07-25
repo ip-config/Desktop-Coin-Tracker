@@ -42,7 +42,6 @@ ETH: 0xe4af2278587645dd9dc238b5288c816437417bd8<br>
 ![img](https://i.imgur.com/8rR20lq.png)
 ![img](https://i.imgur.com/7YQ9cvH.png)
 ![img](https://i.imgur.com/sAF8Iji.png)
-![img](https://i.imgur.com/FN9dPKG.jpg)
 ![img](https://i.imgur.com/vwHIcjA.png)
 
 </center>
