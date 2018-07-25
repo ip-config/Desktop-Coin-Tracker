@@ -1,5 +1,6 @@
 const electron = require("electron");
-const {session} = require('electron')
+const { session } = require("electron");
+
 // Module to control application life.
 const app = electron.app;
 const windowStateKeeper = require("electron-window-state");
@@ -10,19 +11,8 @@ if (handleSquirrelEvent(app)) {
 	return;
 }
 
-
- const _setImmediate = setImmediate
-  const _clearImmediate = clearImmediate
-  process.once('loaded', () => {
-    global.setImmediate = _setImmediate
-    global.clearImmediate = _clearImmediate
-  })
-
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-
-var startTime = Date.now();
-  
 
 const path = require("path");
 const url = require("url");
@@ -45,36 +35,26 @@ app.on("ready", function() {
 		width: mainWindowState.width,
 		height: mainWindowState.height,
 		show: false,
-		backgroundColor: '#262626'
-		
+		backgroundColor: "#262626"
 	});
+
 	win.loadURL(
 		url.format({
 			pathname: path.join(__dirname, "index.html"),
 			protocol: "file:",
-			slashes: true,
-			
+			slashes: true
 		})
 	);
+win.__devtron = {require: require, process: process}
+	setTimeout(function() {
+		win.show();
+	}, 1000);
 
-
- 
-    setTimeout(function(){
-      win.show();      
-	  
-   
-    }, 1000);
-  
 	// Let us register listeners on the window, so we can update the state
 	// automatically (the listeners will be removed when the window is closed)
 	// and restore the maximized or full screen state
-	mainWindowState.manage(win);	
-	
-	
-	 
-   
+	mainWindowState.manage(win);
 });
-
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
@@ -92,7 +72,7 @@ app.on("activate", function() {
 		createWindow();
 	}
 });
- 
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
@@ -158,5 +138,4 @@ function handleSquirrelEvent(application) {
 			application.quit();
 			return true;
 	}
-	
 }

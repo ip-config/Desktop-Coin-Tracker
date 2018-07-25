@@ -77,7 +77,7 @@
 	vertical-align: sub;
 	position: center;
 	display: inline-block;
-	width: 70px;
+	width: 50px;
 	height: 20px;
 	margin: 2px;
 	margin-bottom: 10px;
@@ -116,7 +116,7 @@
 	left: 0;
 	right: 0;
 	border-radius: 20px;
-	box-shadow: 0 0 0 2px #777, 0 0 4px #777;
+	box-shadow: 0 0 0 2px #ff1500, 0 0 4px #ff1500;
 	cursor: pointer;
 	border: 4px solid transparent;
 	overflow: hidden;
@@ -127,41 +127,18 @@
 	content: "";
 	width: 100%;
 	height: 100%;
-	background: #777;
+	background: #ff1500;
 	border-radius: 20px;
-	transform: translateX(-80px);
+	transform: translateX(5px);
 	transition: 0.4s;
-}
-
-.slider2:before {
-	position: absolute;
-	content: "";
-	width: 100%;
-	height: 100%;
-	background: orange;
-	border-radius: 20px;
-	transform: translateX(-50px);
-	transition: 0.4s;
-	border-color: c !important;
-}
-input.in2 + .slider {
-	box-shadow: 0 0 0 2px orange, 0 0 2px orange;
 }
 
 input:checked + .slideredit:before {
-	transform: translateX(20px);
+	transform: translateX(-50px);
 	background: limeGreen;
 }
 input:checked + .slideredit {
 	box-shadow: 0 0 0 2px limeGreen, 0 0 2px limeGreen;
-}
-
-.in2:checked + .slider:before {
-	transform: translateX(10px);
-	background: blue;
-}
-.in2:checked + .slider {
-	box-shadow: 0 0 0 2px blue, 0 0 2px blue;
 }
 
 input:checked + .slider:before {
@@ -302,6 +279,7 @@ body {
 	overflow-x: hidden;
 	overflow-y: hidden;
 	font-size: 120%;
+	height: 100%;
 }
 .bigsort {
 	background-color: #262626;
@@ -322,6 +300,11 @@ body {
 .tvhover:hover {
 	color: limegreen !important;
 	cursor: pointer;
+}
+
+#tvhei {
+	width: 120px !important;
+	border-radius: 0px 5px 5px 0px;
 }
 
 a.w2 {
@@ -352,7 +335,7 @@ img.bil1 {
 }
 
 .nav-link:not(:active) {
-	color: orange !important;
+	color: black !important;
 }
 
 .nav-link:hover {
@@ -619,4 +602,93 @@ hr {
 .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s
 	.offline-ui-content:before {
 	content: "Connection attempt failed.";
+}
+
+.funkyradio div {
+	clear: both;
+	overflow: hidden;
+}
+
+.funkyradio label {
+	width: 100%;
+	border-radius: 3px;
+	border: 1px solid #d1d3d4;
+	font-weight: normal;
+}
+
+.funkyradio input[type="radio"]:empty,
+.funkyradio input[type="checkbox"]:empty {
+	display: none;
+}
+
+.funkyradio input[type="radio"]:empty ~ label,
+.funkyradio input[type="checkbox"]:empty ~ label {
+	position: relative;
+	line-height: 2.5em;
+	text-indent: 3.25em;
+	margin-top: 2em;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.funkyradio input[type="radio"]:empty ~ label:before,
+.funkyradio input[type="checkbox"]:empty ~ label:before {
+	position: absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	content: "";
+	width: 2.5em;
+	background: #d1d3d4;
+	border-radius: 3px 0 0 3px;
+}
+
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label,
+.funkyradio input[type="checkbox"]:hover:not(:checked) ~ label {
+	color: white;
+}
+
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label:before,
+.funkyradio input[type="checkbox"]:hover:not(:checked) ~ label:before {
+	content: "\2714";
+	text-indent: 0.9em;
+	color: #c2c2c2;
+}
+
+.funkyradio input[type="radio"]:checked ~ label,
+.funkyradio input[type="checkbox"]:checked ~ label {
+	color: green;
+}
+
+.funkyradio input[type="radio"]:checked ~ label:before,
+.funkyradio input[type="checkbox"]:checked ~ label:before {
+	content: "\2714";
+	text-indent: 0.9em;
+	color: #333;
+	background-color: #ccc;
+}
+
+.funkyradio input[type="radio"]:focus ~ label:before,
+.funkyradio input[type="checkbox"]:focus ~ label:before {
+	box-shadow: 0 0 0 3px #999;
+}
+
+.funkyradio-success input[type="radio"]:checked ~ label:before,
+.funkyradio-success input[type="checkbox"]:checked ~ label:before {
+	color: #fff;
+	background-color: #5cb85c;
+}
+
+#radioBtn .notActive {
+	color: #3276b1;
+	background-color: #fff;
+}
+
+.popover {
+	min-width: 35em !important;
+	background: #262626;
 }

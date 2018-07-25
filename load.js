@@ -8,7 +8,6 @@ function capitalizeFirstLetter(string) {
 
 function inetcheck() {
 	if (!navigator.onLine) {
-		console.log("no");
 		swal("Please check your internet connection and restart!");
 	}
 }
@@ -17,12 +16,23 @@ window.load_process = function() {
 	try {
 		let read = JSON.parse(fs.readFileSync("data/currency_changer.json"));
 		fs.readFileSync("data/all_data.json");
-		if (Date.now() > read.time + 280000) {
+		if (((Date.now() / 1000) | 0) > read.time + 280) {
 			load_complete();
 		} else {
+			if (view == "tv") {
+				clock();
+				return;
+			}
 			clearload();
 
-			go();
+			try {
+				if (ueber == 1) {
+					document.getElementById("edi").checked = true;
+					go();
+				}
+			} catch (e) {
+				go();
+			}
 			$("#loading").hide();
 			$("#allcont").show();
 			return;
@@ -36,7 +46,7 @@ window.load_complete = function() {
 		fiat_name: [],
 		fiat_price: [],
 		all: [],
-		time: Date.now()
+		time: (Date.now() / 1000) | 0
 	};
 
 	(function httpGet() {
@@ -216,19 +226,32 @@ window.load_complete = function() {
 							data.data[i].quotes.USD.percent_change_24h
 						);
 						all_data.website_slug.push(data.data[i].website_slug);
-						if (!fs.existsSync(dir)) {
-							fs.mkdirSync(dir);
-						}
-						fs.writeFileSync(
-							"data/all_data.json",
-							JSON.stringify(all_data, null, 4),
-							"utf-8"
-						);
 					}
 				} catch (e) {
-					clearload();
+					if (!fs.existsSync(dir)) {
+						fs.mkdirSync(dir);
+					}
+					fs.writeFileSync(
+						"data/all_data.json",
+						JSON.stringify(all_data, null, 4),
+						"utf-8"
+					);
 
-					go();
+					if (view == "tv") {
+						clock();
+						return;
+					}
+
+					clearload();
+					try {
+						if (ueber == 1) {
+							document.getElementById("edi").checked = true;
+							go();
+						}
+					} catch (e) {
+						go();
+					}
+
 					$("#loading").hide();
 					$("#allcont").show();
 					return;

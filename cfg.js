@@ -176,6 +176,67 @@ let allcolortype = [
 	"background-color",
 	"background-color"
 ];
+let tvsetall = [
+	"ACCD",
+	"AROON",
+	"ATR",
+	"AwesomeOscillator",
+	"BB",
+	"BollingerBandsR",
+	"BollingerBandsWidth",
+	"CCI",
+	"ChaikinOscillator",
+	"chandeMO",
+	"ChoppinessIndex",
+	"CMF",
+	"CorrelationCoefficient",
+	"CRSI",
+	"DetrendedPriceOscillator",
+	"DM",
+	"DONCH",
+	"DoubleEMA",
+	"EaseOfMovement",
+	"EFI",
+	"ENV",
+	"FisherTransform",
+	"hullMA",
+	"HV",
+	"IchimokuCloud",
+	"KLTNR",
+	"KST",
+	"LinearRegression",
+	"MACD",
+	"MAExp",
+	"MASimple",
+	"MAVolumeWeighted",
+	"MAWeighted",
+	"MF",
+	"MOM",
+	"MoonPhases",
+	"OBV",
+	"PivotPointsHighLow",
+	"PivotPointsStandard",
+	"PriceOsc",
+	"PriceVolumeTrend",
+	"PSAR",
+	"ROC",
+	"RSI",
+	"SMIErgodicIndicator",
+	"SMIErgodicOscillator",
+	"Stochastic",
+	"StochasticRSI",
+	"studyADR",
+	"TripleEMA",
+	"Trix",
+	"UltimateOsc",
+	"VigorIndex",
+	"VolatilityIndex",
+	"Volume",
+	"VSTOP",
+	"VWAP",
+	"WilliamR",
+	"WilliamsAlligator"
+];
 let zu = 0;
 let cc = 0;
 let roundup = 2;
@@ -209,14 +270,86 @@ function time() {
 }
 
 $(function() {
-	$("#slimtab,#bigsort").css({ height: $(window).innerHeight() - 110 });
+	$("#slimtab,#bigsort,#tvtab").css({ height: $(window).innerHeight() - 110 });
 	$(window).resize(function() {
-		$("#slimtab,#bigsort").css({ height: $(window).innerHeight() - 110 });
+		$("#slimtab,#bigsort,#tvtab").css({
+			height: $(window).innerHeight() - 110
+		});
 	});
 });
 
 document.addEventListener("DOMContentLoaded", init, false);
 function init() {
+	try {
+		JSON.parse(fs.readFileSync("data/last_update_check.json"));
+	} catch (e) {
+		$.get(
+			"https://api.github.com/repos/Escaflownevan/Desktop-Coin-Tracker/releases",
+			function(data, status) {
+				var shell = require("electron").shell;
+				$(document).on("click", 'a[href^="http"]', function(event) {
+					event.preventDefault();
+					shell.openExternal(this.href);
+				});
+
+				act_ver = JSON.parse(fs.readFileSync("./resources/app/package.json"));
+
+				try {
+					if (!fs.existsSync("data")) {
+						fs.mkdirSync("data");
+					}
+
+					fs.writeFileSync(
+						"data/last_update_check.json",
+						JSON.stringify(Date.now(), null, 4),
+						"utf-8"
+					);
+				} catch (e) {}
+
+				if (data[0].name > "v" + act_ver.version) {
+					swal({
+						title: "New Version is online!",
+						html:
+							"<a href=https://github.com/Escaflownevan/Desktop-Coin-Tracker/releases>Check here to update</a>",
+						confirmButtonText: "Ok"
+					}).then(result => {
+						location.reload();
+					});
+				}
+			}
+		);
+	}
+	last_time = JSON.parse(fs.readFileSync("data/last_update_check.json"));
+
+	if (Date.now() > last_time + 3600000) {
+		$.get(
+			"https://api.github.com/repos/Escaflownevan/Desktop-Coin-Tracker/releases",
+			function(data, status) {
+				var shell = require("electron").shell;
+				$(document).on("click", 'a[href^="http"]', function(event) {
+					event.preventDefault();
+					shell.openExternal(this.href);
+				});
+
+				act_ver = JSON.parse(fs.readFileSync("./resources/app/package.json"));
+				fs.writeFileSync(
+					"data/last_update_check.json",
+					JSON.stringify(Date.now(), null, 4),
+					"utf-8"
+				);
+
+				if (data[0].name > "v" + act_ver.version) {
+					swal({
+						title: "New Version is online!",
+						html:
+							"<a href=https://github.com/Escaflownevan/Desktop-Coin-Tracker/releases>Check here to update</a>",
+						confirmButtonText: "Ok"
+					});
+				}
+			}
+		);
+	}
+
 	$("#loading").show();
 	$("#allcont").hide();
 	time();
@@ -232,25 +365,30 @@ function init() {
 	});
 
 	$(".in2").click(function(event, ui) {
-		if ($(".in2").prop("checked")) {
+		if (this.id == "vlist") {
+			$("#tvtab").html("");
 			bigsort.style.display = "none";
 			slimall.style.display = "table";
+			slimtab.style.display = "block";
 			view = "list";
-		} else {
+		}
+		if (this.id == "vbig") {
+			$("#tvtab").html("");
 			bigsort.style.display = "block";
 			slimall.style.display = "none";
 			view = "big";
 		}
-		$("#edi").prop("checked", false);
-		$(".numin").prop("disabled", true);
-		$(".numin").css({
-			color: "white",
-			"background-color": "transparent",
-			"border-style": "none"
-		});
-		$(".ddbt").hide();
+		if (this.id == "vtv") {
+			bigsort.style.display = "none";
+			slimall.style.display = "none";
+			view = "tv";
+		}
+
 		obj["Portfolio" + firstview]["View"] = view;
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+		if (view == "list" || view == "big") {
+			clearload();
+		}
 	});
 
 	$("#exampleModal").on("shown.bs.modal", function() {
@@ -321,7 +459,9 @@ function init() {
 		alsize[i] = ">";
 
 		$("#cn").append(
-			"<li class=list-group-item style=text-align:center!important;>" +
+			"<li id='" +
+				erstergross(nc.substring(0, nc.search(":"))) +
+				"cnl'  class=list-group-item style=text-align:center!important;>" +
 				erstergross(nc.substring(0, nc.search(":"))) +
 				"<button style='position:absolute;right:0;padding:1px 8px!important' type=button class='btn btn-danger' onclick=del('" +
 				erstergross(nc.substring(0, nc.search(":"))) +
@@ -350,7 +490,9 @@ function init() {
 				coinl[i] = all_data.coinl_all[i];
 				coink[i] = all_data.coink_all[i];
 				$("#cn").append(
-					"<li class=list-group-item style=text-align:center!important;>" +
+					"<li id='" +
+						coinl[i] +
+						"cnl' class=list-group-item style=text-align:center!important;>" +
 						coinl[i] +
 						"<button style='position:absolute;right:0;padding:1px 8px!important' type=button class='btn btn-danger' onclick=del('" +
 						coinl[i] +
@@ -367,6 +509,7 @@ function init() {
 			swal("All coins you wish are already in list");
 		}
 		$("#tx").val("");
+
 		clearload();
 	});
 }
@@ -392,7 +535,7 @@ let startMouseMove = function() {
 };
 
 window.clock = function() {
-	$(".your-clock").FlipClock(timeclock, {
+	clockopen = $(".your-clock").FlipClock(timeclock, {
 		clockFace: "MinuteCounter",
 		clockFaceOptions: {
 			countdown: true
@@ -402,38 +545,59 @@ window.clock = function() {
 			$(".your-clock").hide();
 			$("#your_loading").show();
 
+			window.ueber = 0;
+			if (
+				$("#aset").data("bs.popover")._activeTrigger.click == true &&
+				document.getElementById("edi").checked
+			) {
+				ueber = 1;
+			}
+			if (view == "tv") {
+				$("#your_loading").hide();
+			}
 			load_process();
+
+			if (ueber == 1) {
+				document.getElementById("edi").checked = true;
+				go();
+			}
 		}
 	});
 };
 
 window.go = function() {
 	hide();
-	if (document.getElementById("edi").checked) {
-		$(".numin").prop("disabled", false);
-		$(".numin").css({
-			color: "black",
-			"background-color": "white",
-			"border-style": "solid"
-		});
-		if (view == "big") {
-			$(".tt2").show();
-			$(".tt4").show();
-			$(".tt5").show();
-		}
 
-		$(".ddbt").show();
+	if ($("#aset").data("bs.popover")._activeTrigger.click == true) {
+		if (document.getElementById("edi").checked) {
+			$(".numin").prop("disabled", false);
+			$(".numin").css({
+				color: "black",
+				"background-color": "white",
+				"border-style": "solid"
+			});
+			if (view == "big") {
+				$(".tt2").show();
+				$(".tt4").show();
+				$(".tt5").show();
+			}
+
+			$(".ddbt").show();
+		}
 	}
 	$(".your-clock").show();
 	$("#your_loading").hide();
 	colorload();
+
 	clock();
 };
 
 function topnavhs() {
 	$("#topnav").fadeOut();
+	$("#aset").popover("hide");
 	if (nop > 1) {
 		$("#psw2").fadeIn();
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 	}
 
 	$(".dbtn").show();
@@ -556,15 +720,7 @@ function httpGet(theUrl) {
 
 window.loadall = function() {
 	$("#bigsort,#slim").html("");
-	dropzone.style.display = "none";
 
-	if (parseInt(nop) > 1) {
-		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
-		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
-		document.getElementById("psw").style.display = "block";
-	} else {
-		document.getElementById("psw").style.display = "none";
-	}
 	all_data = JSON.parse(fs.readFileSync("data/all_data.json"));
 	curr = JSON.parse(fs.readFileSync("data/currency_changer.json"));
 	let curr_posi = curr.fiat_name.indexOf(fiatl);
@@ -714,13 +870,26 @@ window.loadall = function() {
 	plload();
 
 	if (view == "list") {
-		$(".in2").prop("checked", true);
-		slimall.style.display = "table";
+		$("#tvtab").html("");
 		bigsort.style.display = "none";
-	} else {
-		$(".in2").prop("checked", false);
+		slimall.style.display = "table";
+		slimtab.style.display = "block";
+		$(".your-clock").css("display", "block");
+	}
+	if (view == "big") {
+		$("#tvtab").html("");
 		bigsort.style.display = "block";
 		slimall.style.display = "none";
+		$(".your-clock").css("display", "block");
+	}
+	if (view == "tv") {
+		tvallview();
+		bigsort.style.display = "none";
+		slimall.style.display = "none";
+		$(".your-clock,#your_loading").css("display", "none");
+		setTimeout(function() {
+			$("#edi").attr("disabled", true);
+		}, 1);
 	}
 	hide();
 
@@ -899,6 +1068,10 @@ function load(
 			"')>Smaller than</a></div>";
 		ddb = "";
 	}
+	if (view == "tv") {
+		dda = "";
+		ddb = "";
+	}
 	if (cal > 0) {
 		vorz = als;
 	} else {
@@ -946,7 +1119,9 @@ function load(
 			btcbb2 +
 			" BTC</a><span class=w id=" +
 			coinlong +
-			"p><br><a id=pricecolor class=pricecolor style='position: fix;'>" +
+			"p><br><a onclick=tv('" +
+			coinshort +
+			"') id=pricecolor class=pricecolor style='cursor:pointer;position: fix;'>" +
 			coinprice +
 			" " +
 			fiatk +
@@ -1026,7 +1201,11 @@ function load(
 		}
 		if (colorder[v] == "lp") {
 			$("#" + coinlong + "maintr").append(
-				"<td class=pricecolor>" + coinprice + "</td>"
+				"<td onclick=tv('" +
+					coinshort +
+					"') style=cursor:pointer; class=pricecolor>" +
+					coinprice +
+					"</td>"
 			);
 		}
 		if (colorder[v] == "mp") {
@@ -1209,6 +1388,30 @@ function plload() {
 	}
 }
 
+function tvsetin(id) {
+	if (obj.TV_Indicators == undefined) {
+		allid = [];
+	} else {
+		allid = obj.TV_Indicators;
+	}
+
+	if ($("#" + id).prop("checked")) {
+		allid.push(id + "@tv-basicstudies");
+	} else {
+		try {
+			allid.splice(allid.indexOf(id), 1);
+			if (allid.length == 0) {
+				delete obj.TV_Indicators;
+				fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+				return;
+			}
+		} catch (e) {}
+	}
+
+	obj["TV_Indicators"] = allid;
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+}
+
 function plchange() {
 	if (flagpl == 0) {
 		flagpl = 1;
@@ -1310,7 +1513,7 @@ function del(value) {
 
 		a.splice(b, 1);
 	}
-
+	$("#" + value + "cnl").remove();
 	save(firstview);
 	$("#bigsort").html("");
 	$("#slim").html("");
@@ -1339,7 +1542,7 @@ function del(value) {
 			alsize[i]
 		);
 	}
-	clearload();
+	//clearload();
 	hide();
 }
 
@@ -1450,14 +1653,22 @@ window.first = function() {
 		} catch (e) {}
 
 		for (let i = 1; i - 1 < nop; i++) {
+			if (firstview == i) {
+				a = "active";
+			} else {
+				a = "";
+			}
 			$("#allportin").append(
-				"<th><div ><label class=switch><input class=portf id=" +
+				'  <label   class="btn btn-lg btn-info ' +
+					a +
+					'" onclick="porttog(' +
 					i +
-					"   type=checkbox check=false onclick=porttog(id)><span class=slider></span></label><a class=pnum>&nbsp;&nbsp;" +
+					')">    <input style=" border: 1px Black solid;" type="radio"  autocomplete="off" > ' +
 					i +
-					"</a></div></th>"
+					"  </label>"
 			);
 		}
+
 		$("#forbutton").append(
 			"<button onclick=newportf() type=button class=btnnew>+</button><button onclick=delportf() type=button style=background:red class=btnnew>-</button><button onclick=dupli() type=button style=background:blue class=btnnew>&#10064;</button>"
 		);
@@ -1468,7 +1679,9 @@ window.first = function() {
 		}
 		for (let i = 0; i < coinl.length; i++) {
 			$("#cn").append(
-				"<li class=list-group-item style=text-align:center!important; value=" +
+				"<li id='" +
+					coinl[i] +
+					"cnl' class=list-group-item  style=text-align:center!important; value=" +
 					coinl[i] +
 					">" +
 					coinl[i] +
@@ -1615,11 +1828,17 @@ function dupli() {
 }
 
 function ed() {
+	if (view == "tv") {
+		$("#edi").attr("disabled", true);
+		document.getElementById("edi").checked = false;
+		return;
+	}
 	if (document.getElementById("edi").checked) {
 		$("#slimall").addClass("draggable");
 		load_js();
 		$("tbody#slim").sortable({
 			opacity: 0.7,
+			zIndex: 10000,
 			scroll: false,
 			sort: function(event, ui) {
 				if (!ui.helper) return;
@@ -1644,13 +1863,12 @@ function ed() {
 			activate: function(event, ui) {
 				$("#udbt").hide();
 
-				dropzone.style.display = "block";
 				let a = ui.item[0].id;
 				vd = a.slice(0, a.indexOf("maintr"));
 			},
 			stop: function(event, ui) {
 				$("#udbt").show();
-				dropzone.style.display = "none";
+
 				let new_index = ui.item.index();
 				let old_index = coinl.indexOf(vd.slice(0, vd.indexOf("maintr")));
 				for (let i = 0; i < dellist.length; i++) {
@@ -1663,6 +1881,7 @@ function ed() {
 
 		$(".bigsort").sortable({
 			opacity: 0.7,
+			zIndex: 10000,
 			items: ".sortable",
 			sort: function(event, ui) {
 				if (!ui.helper) return;
@@ -1684,12 +1903,12 @@ function ed() {
 			},
 			activate: function(event, ui) {
 				$("#udbt").hide();
-				dropzone.style.display = "block";
+
 				vd = ui.item[0].id;
 			},
 			stop: function(event, ui) {
 				$("#udbt").show();
-				dropzone.style.display = "none";
+
 				let new_index = ui.item.index();
 				let old_index = coinl.indexOf(vd);
 
@@ -1700,24 +1919,6 @@ function ed() {
 			}
 		});
 
-		$("#dropzone").droppable({
-			tolerance: "touch",
-			drop: function() {
-				swal({
-					title: "Are you sure?",
-					text: "You want delete " + vd,
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#3085d6",
-					cancelButtonColor: "#d33",
-					confirmButtonText: "Yes, delete it!"
-				}).then(result => {
-					if (result.value) {
-						del(vd);
-					}
-				});
-			}
-		});
 		$("#aler").hide();
 		if (view == "big") {
 			$(".tt2").show();
@@ -1841,28 +2042,6 @@ function ed() {
 		capit.length = 0;
 		total = 0;
 
-		for (let i = 0; i < coinl.length; i++) {
-			let u = coinl[i].toLowerCase();
-			load(
-				coinl[i],
-				bil[i],
-				coinr[i],
-				btcprice[i],
-				coinp[i],
-				coin1h[i],
-				coin24h[i],
-				coin7d[i],
-				coinm[i],
-				coinam[i],
-				coinbp[i],
-				coinal[i],
-				coink[i],
-				capit[i],
-				btcb[i],
-				btcbb[i],
-				alsize[i]
-			);
-		}
 		hide();
 
 		clearload();
@@ -1888,16 +2067,16 @@ function porttog(id) {
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 	clearload();
 }
-const { webFrame } = require("electron");
+
 window.clearload = function() {
 	if (cc == 10) {
-			location.reload();
+		location.reload();
 		cc = 0;
 	} else {
 		cc++;
 	}
 
-	$("#cn,#allportin,#forbutton,#glob").html("");
+	$("#cn,#allportin,#forbutton,#glob,#tvset").html("");
 
 	capit.length = 0;
 
@@ -1913,7 +2092,101 @@ window.clearload = function() {
 	loadall();
 
 	load_js();
+	$('[data-toggle="popover"]')
+		.popover({
+			html: true
+		})
+		.on("click", function(e) {
+			if (parseInt(nop) > 1) {
+				document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
 
+				document.getElementById("psw").style.display = "inline";
+			} else {
+				document.getElementById("psw").style.display = "none";
+				document.getElementById("setportf").style.display = "none";
+			}
+
+			if ($("#aset").data("bs.popover")._activeTrigger.click == false) {
+				try {
+					$("#edi").prop("checked", false);
+					ed();
+				} catch (e) {}
+			}
+		});
+
+	if (obj["Nav_show"] == 0) {
+		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+	}
+	$("#vlist,#vtv,#vbig").removeClass("active");
+	$("#v" + view).addClass("active");
+
+	$("#radioBtn a").on("click", function() {
+		var sel = $(this).data("title");
+		var tog = $(this).data("toggle");
+		$("#" + tog).prop("value", sel);
+		obj["TV_Live_Column"] = sel;
+		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+		$('a[data-toggle="' + tog + '"]')
+			.not('[data-title="' + sel + '"]')
+			.removeClass("active")
+			.addClass("notActive");
+		$('a[data-toggle="' + tog + '"][data-title="' + sel + '"]')
+			.removeClass("notActive")
+			.addClass("active");
+	});
+
+	if (obj.TV_Live_Column == undefined) {
+		obj["TV_Live_Column"] = 3;
+		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+	} else {
+		$('a[data-toggle="fun"]')
+			.not('[data-title="' + obj.TV_Live_Column + '"]')
+			.removeClass("active")
+			.addClass("notActive");
+		$('a[data-toggle="fun"][data-title="' + obj.TV_Live_Column + '"]')
+			.removeClass("notActive")
+			.addClass("active");
+	}
+
+	if (obj.TV_Live_Heigth == undefined) {
+		obj["TV_Live_Heigth"] = 400;
+		$("#tvhei").val("400");
+		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+	} else {
+		$("#tvhei").val(obj.TV_Live_Heigth);
+	}
+	if (
+		$("#tvhei").val() == 0 ||
+		$("#tvhei").val() == undefined ||
+		$("#tvhei").val() == ""
+	) {
+		obj["TV_Live_Heigth"] = 400;
+		$("#tvhei").val("400");
+		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+	}
+
+	for (let i = 0; i < tvsetall.length; i++) {
+		$("#tvset").append(
+			'  <label class="switch">	<input class=tvinset type="checkbox" id="' +
+				tvsetall[i] +
+				'" value="' +
+				tvsetall[i] +
+				'"  onclick="tvsetin(id)">	<span class="slider round" ></span></label><a >&nbsp;&nbsp;"' +
+				tvsetall[i] +
+				'"</a><hr>'
+		);
+	}
+	if (obj.TV_Indicators == undefined) {
+	} else {
+		let c = obj.TV_Indicators;
+		for (let p = 0; p < c.length; p++) {
+			let b = c[p];
+
+			let a = b.slice(0, b.indexOf("@"));
+
+			$("#" + a).prop("checked", true);
+		}
+	}
 	try {
 		cuco = JSON.parse(fs.readFileSync("custom_color.css"));
 		let i = 0;
@@ -1939,18 +2212,46 @@ window.clearload = function() {
 			custom_color[property] =
 				a.slice(0, a.indexOf("#")) + a.slice(a.indexOf("#"), a.length);
 		}
-		if (view == "big") {
-			$("#bigsort").show();
-			$("#slimall").hide();
-		} else {
-			$("#bigsort").hide();
-			$("#slimall").show();
-		}
 	} catch (e) {}
+
+	if (view == "big") {
+		$("#vbig").prop("checked", true);
+		$("#bigsort").show();
+		$("#slimall").hide();
+		$(".your-clock").css("display", "block");
+		$("#edi").removeAttr("disabled");
+	}
+	if (view == "list") {
+		$("#vlist").prop("checked", true);
+		$("#bigsort").hide();
+		$("#slimall").show();
+		$(".your-clock").css("display", "block");
+		$("#edi").removeAttr("disabled");
+	}
+	if (view == "tv") {
+		$("#vtv").prop("checked", true);
+		$("#bigsort").hide();
+		$("#slimall").hide();
+		tvallview();
+		$("#edi").attr("disabled", true);
+		setTimeout(function() {
+			$(".your-clock,#your_loading").css("display", "none");
+		}, 1);
+	}
+
 	$(".tvhover").css("pointer-events", "visible");
 	$("#loading").hide();
 	$("#allcont").show();
 };
+
+function tvheight() {
+	obj.TV_Live_Heigth = $("#tvhei").val();
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+}
+
+function setzu() {
+	$("#aset").popover("hide");
+}
 
 function npn(checked) {
 	if (checked) {
@@ -2019,9 +2320,19 @@ function colorload() {
 		if (view == "big") {
 			$("#bigsort").show();
 			$("#slimall").hide();
-		} else {
+			$(".your-clock").css("display", "block");
+		}
+		if (view == "list") {
 			$("#bigsort").hide();
 			$("#slimall").show();
+			$(".your-clock").css("display", "block");
+		}
+		if (view == "tv") {
+			$("#bigsort").hide();
+			$("#slimall").hide();
+			tvallview();
+			$(".your-clock,#your_loading").css("display", "none");
+			$("#edi").attr("disabled", true);
 		}
 		let a = allcolorid[this.id];
 		let b = allcolortype[this.id];
@@ -2053,20 +2364,155 @@ function colorload() {
 		);
 	});
 }
+function openext() {
+	var shell = require("electron").shell;
+	shell.openExternal(
+		"https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3"
+	);
+}
+function tvallview() {
+	let a = obj.TV_Indicators;
+	let aa = "";
+	if (a == undefined) {
+	} else {
+		for (let i = 0; i <= a.length - 1; i++) {
+			aa += '"' + a[i] + '",';
+		}
+	}
+	let htmlhead =
+		'<div  style="overflow-x:hidden !important;overflow-y: auto;background:' +
+		$("body").css("background-color") +
+		'"<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"> <div style="position:relative;text-align:center"><a style=cursor:pointer href="#" onclick=openext() rel="noopener"><img src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a></div>';
+	let htmlend = "</div>";
+	let htmlall = "";
+	let ifeins = 0;
+	let ifzwei = obj.TV_Live_Column - 1;
+	for (let i = 0; i < coink.length; i++) {
+		if (i === 0) {
+			htmlall = htmlhead;
+		}
+
+		if (i === ifeins) {
+			ifeins = i + obj.TV_Live_Column;
+			htmlall += '<div class="row">';
+		}
+
+		let htmltemp =
+			'  <div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <script type="text/javascript">	  new TradingView.widget(	  {	"autosize":true,   "symbol": "' +
+			coink[i] +
+			"USD" +
+			'",	 "interval": "5",	  "timezone": "' +
+			moment.tz.guess() +
+			'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	 "referral_id": "11778",  "allow_symbol_change": true, "studies": [    ' +
+			aa +
+			'  ],	  "container_id": "tradingview_ee558"	}	  );					</script></div>';
+
+		let uri = "data:text/html," + encodeURIComponent(htmltemp);
+
+		htmlall +=
+			" <div class='col-sm'><iframe id=myIframe scrolling=no frameborder=0  style='position: relative;width: 100%; height: " +
+			obj.TV_Live_Heigth +
+			"px!important' src='" +
+			uri +
+			"'></iframe></div>";
+		if (i === ifzwei) {
+			ifzwei = i + obj.TV_Live_Column;
+			htmlall += "</div>";
+		}
+		if (i === coink.length) {
+			htmlall += htmlend;
+		}
+	}
+
+	$("#tvtab").html(htmlall);
+	slimtab.style.display = "none";
+}
+
+function tvall() {
+	let a = obj.TV_Indicators;
+	let aa = "";
+	if (a == undefined) {
+	} else {
+		for (let i = 0; i <= a.length - 1; i++) {
+			aa += '"' + a[i] + '",';
+		}
+	}
+	let htmlhead =
+		'<html><head><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script><style>body {overflow-x: hidden;		background-color: #262626!important;}</style> <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous"><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> </head><body><div style="position:relative;text-align:center"><a style=cursor:pointer href="#" onclick=openext() rel="noopener"><img src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a></div>';
+	let htmlend = " </body></html>";
+	let htmlall = "";
+	let ifeins = 0;
+	let ifzwei = obj.TV_Live_Column - 1;
+	for (let i = 0; i < coink.length; i++) {
+		if (i === 0) {
+			htmlall = htmlhead;
+		}
+
+		if (i === ifeins) {
+			ifeins = i + obj.TV_Live_Column;
+			htmlall += '<div class="row">';
+		}
+
+		let htmltemp =
+			'  <div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <script type="text/javascript">	  new TradingView.widget(	  {	"autosize":true,   "symbol": "' +
+			coink[i] +
+			"USD" +
+			'",	 "interval": "5",	  "timezone": "' +
+			moment.tz.guess() +
+			'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	 "referral_id": "11778",  "allow_symbol_change": true, "studies": [    ' +
+			aa +
+			'  ],	  "container_id": "tradingview_ee558"	}	  );					</script></div>';
+
+		let uri = "data:text/html," + encodeURIComponent(htmltemp);
+
+		htmlall +=
+			" <div class='col-sm'><iframe id=myIframe scrolling=no frameborder=0  style='position: relative;width: 100%;height:" +
+			obj.TV_Live_Heigth +
+			"' src='" +
+			uri +
+			"'></iframe></div>";
+		if (i === ifzwei) {
+			ifzwei = i + obj.TV_Live_Column;
+			htmlall += "</div>";
+		}
+		if (i === coink.length) {
+			htmlall += htmlend;
+		}
+	}
+
+	let uri2 = "data:text/html," + encodeURIComponent(htmlall);
+	window.open(uri2, "TradingView", "width=1000,height=900,x=0,y=0");
+}
+
+function delindi() {
+	$(".tvinset").prop("checked", false);
+	delete obj.TV_Indicators;
+	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
+}
 
 function tv(coin) {
+	let a = obj.TV_Indicators;
+	let aa = "";
+	if (a == undefined) {
+	} else {
+		for (let i = 0; i <= a.length - 1; i++) {
+			aa += '"' + a[i] + '",';
+		}
+	}
 	var html =
-		'<html><head></head><body><div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"><a href="#" onclick=openext() rel="noopener" ><span class="blue-text">' +
+		'<html><head></head><body ><div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"><div style="width:100%"><a href="#" onclick=openext() rel="noopener" ><span class="blue-text">' +
 		coin +
 		"/" +
 		"USD" +
-		' chart</span></a> by TradingView&nbsp;&nbsp;&nbsp;&nbsp;       USD is default fiat! Not all coins are listed on Tradingview<img style=cursor:pointer href="#" onclick=openext() rel="noopener" src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a><img src="https://tradingview.go2cloud.org/aff_i?offer_id=2&file_id=292&aff_id=11778" width="1" height="1" /></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script> <script type="text/javascript">	  new TradingView.widget(	  {	  "width": 980,	  "height": 610,	  "symbol": "' +
+		' chart</span> by TradingView&nbsp;&nbsp;&nbsp;&nbsp;       USD is default fiat! Not all coins are listed on Tradingview</div><img style=cursor:pointer href="#" onclick=openext() rel="noopener" src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a><img src="https://tradingview.go2cloud.org/aff_i?offer_id=2&file_id=292&aff_id=11778" width="1" height="1" /></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script> <script type="text/javascript">	  new TradingView.widget(	  {	  "width": 980,	  "height": 610,	  "symbol": "' +
 		coin +
 		"USD" +
 		'",	 "interval": "D",	  "timezone": "' +
 		moment.tz.guess() +
-		'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	  "allow_symbol_change": true,	  "container_id": "tradingview_ee558"	}	  );	var shell = require("electron").shell;				</script></div></body></html>';
-	uri = "data:text/html," + encodeURIComponent(html);
+		'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	 "referral_id": "11778",  "allow_symbol_change": true, "studies": [    ' +
+		aa +
+		'  ],	  "container_id": "tradingview_ee558"	}	  );	var shell = require("electron").shell;				</script></div></body></html>';
+	let uri = "data:text/html," + encodeURIComponent(html);
 	newWindow = window.open(
 		uri,
 		"TradingView " + coin + "/" + "USD",
@@ -2111,12 +2557,6 @@ function localload() {
 	first();
 	for (let i = 0; i < catnames.length; i++) {
 		$("#" + catnames[i]).prop("checked", category[catnames[i]]);
-	}
-	if (view == "big") {
-		$(".in2").prop("checked", false);
-	}
-	if (view == "list") {
-		$(".in2").prop("checked", true);
 	}
 }
 
@@ -2393,22 +2833,34 @@ function nextportf() {
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 
 		clearload();
+
 		$("#slimall").css("pointer-events", "none");
 
-		$(".tvhover").css("pointer-events", "visible");
-		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
-		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		$(".tvhover,.pricecolor").css("pointer-events", "visible");
+		if (obj["Nav_show"] == 1) {
+			if ($("#aset").data("bs.popover")._activeTrigger.click == true) {
+				document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+			}
+		} else {
+			document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		}
 	} else {
 		firstview = (parseInt(firstview) + 1).toString();
 		obj.First_View_Portfolio = firstview;
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 
 		clearload();
+
 		$("#slimall").css("pointer-events", "none");
 
-		$(".tvhover").css("pointer-events", "visible");
-		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
-		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		$(".tvhover,.pricecolor").css("pointer-events", "visible");
+		if (obj["Nav_show"] == 1) {
+			if ($("#aset").data("bs.popover")._activeTrigger.click == true) {
+				document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+			}
+		} else {
+			document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		}
 	}
 }
 
@@ -2419,20 +2871,34 @@ function bevorportf() {
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 
 		clearload();
+
 		$("#slimall").css("pointer-events", "none");
-		$(".tvhover").css("pointer-events", "visible");
-		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
-		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+
+		$(".tvhover,.pricecolor").css("pointer-events", "visible");
+		if (obj["Nav_show"] == 1) {
+			if ($("#aset").data("bs.popover")._activeTrigger.click == true) {
+				document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+			}
+		} else {
+			document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		}
 	} else {
 		firstview = (parseInt(firstview) - 1).toString();
 		obj.First_View_Portfolio = firstview;
 		fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 
 		clearload();
+
 		$("#slimall").css("pointer-events", "none");
-		$(".tvhover").css("pointer-events", "visible");
-		document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
-		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+
+		$(".tvhover,.pricecolor").css("pointer-events", "visible");
+		if (obj["Nav_show"] == 1) {
+			if ($("#aset").data("bs.popover")._activeTrigger.click == true) {
+				document.getElementById("portfnr").innerHTML = "&#160;" + firstview;
+			}
+		} else {
+			document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		}
 	}
 }
 
