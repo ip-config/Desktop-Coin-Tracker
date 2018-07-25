@@ -20,7 +20,7 @@ Start: Win = Coins.exe / Linux = ./Coins
 <strong>- Set buy price and amount for calculating profits</strong><br>
 <strong>- Set alert for every coin</strong><br>
 <strong>- Set up multiple portfolio</strong><br>
-<strong>- Switch between 2 styles</strong><br>
+<strong>- Switch between 3 styles</strong><br>
 <strong>- Color changer</strong><br>
 <strong>- 134+ Fiat currencies</strong></p>
 <p style="text-align: center;">
@@ -39,10 +39,9 @@ ETH: 0xe4af2278587645dd9dc238b5288c816437417bd8<br>
 
 &copy;Escaflowne
 
-![img](https://i.imgur.com/18Cm3n2.jpg)
-![img](https://i.imgur.com/Bh4sACN.jpg)
-![img](https://i.imgur.com/5KSFSqz.jpg)
-![img](https://i.imgur.com/FN9dPKG.jpg)
-![img](https://i.imgur.com/h0dXVEn.jpg)
+![img](https://i.imgur.com/8rR20lq.png)
+![img](https://i.imgur.com/7YQ9cvH.png)
+![img](https://i.imgur.com/sAF8Iji.png)
+![img](https://i.imgur.com/vwHIcjA.png)
 
 </center>
