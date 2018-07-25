@@ -20,7 +20,7 @@ Start: Win = Coins.exe / Linux = ./Coins
 <strong>- Set buy price and amount for calculating profits</strong><br>
 <strong>- Set alert for every coin</strong><br>
 <strong>- Set up multiple portfolio</strong><br>
-<strong>- Switch between 2 styles</strong><br>
+<strong>- Switch between 3 styles</strong><br>
 <strong>- Color changer</strong><br>
 <strong>- 134+ Fiat currencies</strong></p>
 <p style="text-align: center;">
