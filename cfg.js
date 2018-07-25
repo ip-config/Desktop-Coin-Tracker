@@ -279,7 +279,14 @@ $(function() {
 });
 
 document.addEventListener("DOMContentLoaded", init, false);
+let z = (Date.now() / 1000) | 0;
 function init() {
+	$("#loading").show();
+	$("#allcont").hide();
+	if (!fs.existsSync("data")) {
+		fs.mkdirSync("data");
+	}
+
 	try {
 		JSON.parse(fs.readFileSync("data/last_update_check.json"));
 	} catch (e) {
@@ -294,47 +301,9 @@ function init() {
 
 				act_ver = JSON.parse(fs.readFileSync("./resources/app/package.json"));
 
-				try {
-					if (!fs.existsSync("data")) {
-						fs.mkdirSync("data");
-					}
-
-					fs.writeFileSync(
-						"data/last_update_check.json",
-						JSON.stringify(Date.now(), null, 4),
-						"utf-8"
-					);
-				} catch (e) {}
-
-				if (data[0].name > "v" + act_ver.version) {
-					swal({
-						title: "New Version is online!",
-						html:
-							"<a href=https://github.com/Escaflownevan/Desktop-Coin-Tracker/releases>Check here to update</a>",
-						confirmButtonText: "Ok"
-					}).then(result => {
-						location.reload();
-					});
-				}
-			}
-		);
-	}
-	last_time = JSON.parse(fs.readFileSync("data/last_update_check.json"));
-
-	if (Date.now() > last_time + 3600000) {
-		$.get(
-			"https://api.github.com/repos/Escaflownevan/Desktop-Coin-Tracker/releases",
-			function(data, status) {
-				var shell = require("electron").shell;
-				$(document).on("click", 'a[href^="http"]', function(event) {
-					event.preventDefault();
-					shell.openExternal(this.href);
-				});
-
-				act_ver = JSON.parse(fs.readFileSync("./resources/app/package.json"));
 				fs.writeFileSync(
 					"data/last_update_check.json",
-					JSON.stringify(Date.now(), null, 4),
+					JSON.stringify(z, null, 4),
 					"utf-8"
 				);
 
@@ -349,9 +318,39 @@ function init() {
 			}
 		);
 	}
+	setTimeout(function() {
+		last_time = JSON.parse(fs.readFileSync("data/last_update_check.json"));
 
-	$("#loading").show();
-	$("#allcont").hide();
+		if (z > last_time + 3600) {
+			$.get(
+				"https://api.github.com/repos/Escaflownevan/Desktop-Coin-Tracker/releases",
+				function(data, status) {
+					var shell = require("electron").shell;
+					$(document).on("click", 'a[href^="http"]', function(event) {
+						event.preventDefault();
+						shell.openExternal(this.href);
+					});
+
+					act_ver = JSON.parse(fs.readFileSync("./resources/app/package.json"));
+					fs.writeFileSync(
+						"data/last_update_check.json",
+						JSON.stringify(z, null, 4),
+						"utf-8"
+					);
+
+					if (data[0].name > "v" + act_ver.version) {
+						swal({
+							title: "New Version is online!",
+							html:
+								"<a href=https://github.com/Escaflownevan/Desktop-Coin-Tracker/releases>Check here to update</a>",
+							confirmButtonText: "Ok"
+						});
+					}
+				}
+			);
+		}
+	}, 500);
+
 	time();
 
 	load_process();
@@ -886,7 +885,7 @@ window.loadall = function() {
 		tvallview();
 		bigsort.style.display = "none";
 		slimall.style.display = "none";
-		$(".your-clock,#your_loading").css("display", "none");
+		$(".your-clock").css("display", "none");
 		setTimeout(function() {
 			$("#edi").attr("disabled", true);
 		}, 1);
@@ -1542,7 +1541,7 @@ function del(value) {
 			alsize[i]
 		);
 	}
-	//clearload();
+
 	hide();
 }
 
@@ -2235,7 +2234,7 @@ window.clearload = function() {
 		tvallview();
 		$("#edi").attr("disabled", true);
 		setTimeout(function() {
-			$(".your-clock,#your_loading").css("display", "none");
+			$(".your-clock").css("display", "none");
 		}, 1);
 	}
 
@@ -2331,7 +2330,7 @@ function colorload() {
 			$("#bigsort").hide();
 			$("#slimall").hide();
 			tvallview();
-			$(".your-clock,#your_loading").css("display", "none");
+			$(".your-clock").css("display", "none");
 			$("#edi").attr("disabled", true);
 		}
 		let a = allcolorid[this.id];

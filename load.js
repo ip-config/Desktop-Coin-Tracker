@@ -23,16 +23,19 @@ window.load_process = function() {
 				clock();
 				return;
 			}
+
 			clearload();
 
 			try {
 				if (ueber == 1) {
 					document.getElementById("edi").checked = true;
 					go();
+					$("#loading").hide();
+					$("#allcont").show();
+					return;
 				}
-			} catch (e) {
-				go();
-			}
+			} catch (e) {}
+			go();
 			$("#loading").hide();
 			$("#allcont").show();
 			return;
@@ -247,11 +250,13 @@ window.load_complete = function() {
 						if (ueber == 1) {
 							document.getElementById("edi").checked = true;
 							go();
-						}
-					} catch (e) {
-						go();
-					}
 
+							$("#loading").hide();
+							$("#allcont").show();
+							return;
+						}
+					} catch (e) {}
+					go();
 					$("#loading").hide();
 					$("#allcont").show();
 					return;

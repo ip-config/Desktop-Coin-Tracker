@@ -1,6 +1,6 @@
 {
   "name": "Desktop-Coin-Tracker",
-  "version": "2.4",
+  "version": "2.4.0",
   "description": "Desktop Coin Tracker",
   "main": "main.js",
   "scripts": {
