@@ -2396,9 +2396,15 @@ function tvallview() {
 			htmlall += '<div class="row">';
 		}
 
+		if (coink[i] == "MIOTA") {
+			c = "IOTA";
+		} else {
+			c = coink[i];
+		}
+
 		let htmltemp =
 			'  <div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <script type="text/javascript">	  new TradingView.widget(	  {	"autosize":true,   "symbol": "' +
-			coink[i] +
+			c +
 			"USD" +
 			'",	 "interval": "5",	  "timezone": "' +
 			moment.tz.guess() +
@@ -2452,9 +2458,15 @@ function tvall() {
 			htmlall += '<div class="row">';
 		}
 
+		if (coink[i] == "MIOTA") {
+			c = "IOTA";
+		} else {
+			c = coink[i];
+		}
+
 		let htmltemp =
 			'  <div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <script type="text/javascript">	  new TradingView.widget(	  {	"autosize":true,   "symbol": "' +
-			coink[i] +
+			c +
 			"USD" +
 			'",	 "interval": "5",	  "timezone": "' +
 			moment.tz.guess() +
@@ -2490,6 +2502,9 @@ function delindi() {
 }
 
 function tv(coin) {
+	if (coin == "MIOTA") {
+		coin = "IOTA";
+	}
 	let a = obj.TV_Indicators;
 	let aa = "";
 	if (a == undefined) {
