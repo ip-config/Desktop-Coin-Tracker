@@ -270,11 +270,20 @@ function time() {
 }
 
 $(function() {
-	$("#slimtab,#bigsort,#tvtab").css({ height: $(window).innerHeight() - 110 });
+	$("#slimtab,#bigsort,#tvtab").css({
+		height: $(window).innerHeight() - 110
+	});
+
 	$(window).resize(function() {
-		$("#slimtab,#bigsort,#tvtab").css({
-			height: $(window).innerHeight() - 110
-		});
+		if ($("#topnav").css("display") == "none") {
+			$("#slimtab,#bigsort,#tvtab").css({
+				height: $(window).innerHeight() - 45
+			});
+		} else {
+			$("#slimtab,#bigsort,#tvtab").css({
+				height: $(window).innerHeight() - 110
+			});
+		}
 	});
 });
 
@@ -479,6 +488,15 @@ function init() {
 			return;
 		}
 		let f = true;
+		let tempcoinl = [];
+		for (let o = 0; o < coinl.length; o++) {
+			if (coinl.indexOf(all_data.coinl_all[o]) == -1) {
+				if (coinl[o] == null) {
+				} else {
+					tempcoinl.push(coinl[o]);
+				}
+			}
+		}
 
 		for (let i = 0; i < top; i++) {
 			if (
@@ -498,6 +516,25 @@ function init() {
 						"')>x</button></li>"
 				);
 				f = false;
+			}
+		}
+
+		if (tempcoinl === []) {
+		} else {
+			for (let p = 0; p < tempcoinl.length; p++) {
+				coinl.push(tempcoinl[p]);
+				coink.push(
+					all_data.coink_all[all_data.coinl_all.indexOf(tempcoinl[p])]
+				);
+				$("#cn").append(
+					"<li id='" +
+						tempcoinl[p] +
+						"cnl' class=list-group-item style=text-align:center!important;>" +
+						tempcoinl[p] +
+						"<button style='position:absolute;right:0;padding:1px 8px!important' type=button class='btn btn-danger' onclick=del('" +
+						tempcoinl[p] +
+						"')>x</button></li>"
+				);
 			}
 		}
 		filler();
@@ -598,7 +635,9 @@ function topnavhs() {
 		$("#psw2").fadeIn();
 		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
 	}
-
+	$("#slimtab,#bigsort,#tvtab").css({
+		height: $(window).innerHeight() - 45
+	});
 	$(".dbtn").show();
 	obj["Nav_show"] = 0;
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
@@ -609,6 +648,9 @@ function topnavend() {
 	$("#psw2").hide();
 	$(".dbtn").hide();
 	obj["Nav_show"] = 1;
+	$("#slimtab,#bigsort,#tvtab").css({
+		height: $(window).innerHeight() - 110
+	});
 	fs.writeFileSync("config.json", JSON.stringify(obj, null, 4), "utf-8");
 }
 
@@ -2115,6 +2157,9 @@ window.clearload = function() {
 
 	if (obj["Nav_show"] == 0) {
 		document.getElementById("portfnr2").innerHTML = "&#160;" + firstview;
+		$("#slimtab,#bigsort,#tvtab").css({
+			height: $(window).innerHeight() - 45
+		});
 	}
 	$("#vlist,#vtv,#vbig").removeClass("active");
 	$("#v" + view).addClass("active");
@@ -2406,7 +2451,7 @@ function tvallview() {
 			'  <div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <script type="text/javascript">	  new TradingView.widget(	  {	"autosize":true,   "symbol": "' +
 			c +
 			"USD" +
-			'",	 "interval": "5",	  "timezone": "' +
+			'",	 "interval": "15",	  "timezone": "' +
 			moment.tz.guess() +
 			'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	 "referral_id": "11778",  "allow_symbol_change": true, "studies": [    ' +
 			aa +
@@ -2468,7 +2513,7 @@ function tvall() {
 			'  <div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <script type="text/javascript">	  new TradingView.widget(	  {	"autosize":true,   "symbol": "' +
 			c +
 			"USD" +
-			'",	 "interval": "5",	  "timezone": "' +
+			'",	 "interval": "15",	  "timezone": "' +
 			moment.tz.guess() +
 			'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	 "referral_id": "11778",  "allow_symbol_change": true, "studies": [    ' +
 			aa +
@@ -2514,23 +2559,19 @@ function tv(coin) {
 		}
 	}
 	var html =
-		'<html><head></head><body ><div class="tradingview-widget-container"> <div id="tradingview_ee558"></div> <div class="tradingview-widget-copyright"><div style="width:100%"><a href="#" onclick=openext() rel="noopener" ><span class="blue-text">' +
-		coin +
-		"/" +
-		"USD" +
-		' chart</span> by TradingView&nbsp;&nbsp;&nbsp;&nbsp;       USD is default fiat! Not all coins are listed on Tradingview</div><img style=cursor:pointer href="#" onclick=openext() rel="noopener" src="https://media.go2speed.org/brand/files/tradingview/2/728x90.jpg" width="728" height="90" border="0" /></a><img src="https://tradingview.go2cloud.org/aff_i?offer_id=2&file_id=292&aff_id=11778" width="1" height="1" /></div><script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script> <script type="text/javascript">	  new TradingView.widget(	  {	  "width": 980,	  "height": 610,	  "symbol": "' +
+		'<html><head></head><body ><div class="tradingview-widget-container" style> <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script><script>	var shell = require("electron").shell;			function openext(){shell.openExternal("https://tradingview.go2cloud.org/aff_c?offer_id=2&aff_id=11778&url_id=3")}				</script> <script type="text/javascript">	  new TradingView.widget(	  {	 "autosize":true,	  "symbol": "' +
 		coin +
 		"USD" +
-		'",	 "interval": "D",	  "timezone": "' +
+		'",	 "interval": "15",	  "timezone": "' +
 		moment.tz.guess() +
 		'",	  "theme": "Dark", "hide_side_toolbar":false,	  "style": "1",	  "locale": "en",	  "toolbar_bg": "#f1f3f6",	  "enable_publishing": false,	 "referral_id": "11778",  "allow_symbol_change": true, "studies": [    ' +
 		aa +
-		'  ],	  "container_id": "tradingview_ee558"	}	  );	var shell = require("electron").shell;				</script></div></body></html>';
+		'  ],	  "container_id": "tradingview_ee558"	}	  );	var shell = require("electron").shell;				</script></div><div id="tradingview_ee558" ></div> </body></html>';
 	let uri = "data:text/html," + encodeURIComponent(html);
 	newWindow = window.open(
 		uri,
 		"TradingView " + coin + "/" + "USD",
-		"height=800,width=1050,x=0,y=0"
+		"height=1000,width=1050,x=0,y=0"
 	);
 }
 

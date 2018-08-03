@@ -5,7 +5,7 @@ Start: Win = Coins.exe / Linux = ./Coins
 <center style=" font-size: 30px;"><b>A side project...</b></center><br>
 <p style="text-align: center;"><strong>Coinmarketcap.com data source </strong>
   <br>
-<strong>Yahoo Finance source for fiat currency prices</strong><br>
+<strong>Openrates.io for fiat currency prices</strong><br>
 <br>
 <strong>Autoload pictures </strong><br>
 <strong>Autoversion checker</strong><br>
@@ -22,7 +22,7 @@ Start: Win = Coins.exe / Linux = ./Coins
 <strong>- Set up multiple portfolio</strong><br>
 <strong>- Switch between 3 styles</strong><br>
 <strong>- Color changer</strong><br>
-<strong>- 134+ Fiat currencies</strong></p>
+<strong>- 33+ Fiat currencies</strong></p>
 <p style="text-align: center;">
 <strong>In edit mode:</strong><br>
 <strong>Switch the position of your coin just drag and drop your coins</strong><br>

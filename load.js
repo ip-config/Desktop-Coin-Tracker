@@ -11,7 +11,6 @@ function inetcheck() {
 		swal("Please check your internet connection and restart!");
 	}
 }
-
 window.load_process = function() {
 	try {
 		let read = JSON.parse(fs.readFileSync("data/currency_changer.json"));
@@ -60,13 +59,14 @@ window.load_complete = function() {
 			markersXMLhttp.onload = function() {
 				if (markersXMLhttp.readyState == 4) {
 					// Parse the JSON and call the function passed in as a parameter.
+
 					callbackFunction(JSON.parse(markersXMLhttp.responseText));
 				}
 			};
 
 			markersXMLhttp.open(
 				"GET",
-				"https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json",
+				"http://api.openrates.io/latest?base=USD",
 				true
 			);
 			markersXMLhttp.send();
@@ -77,35 +77,19 @@ window.load_complete = function() {
 			// Do some work with your markers here...
 
 			data = markers;
-			try {
-				for (let o = 0; o < o + 1; o++) {
-					let data_input = data.list.resources[o].resource.fields.name;
+			for (let i = 0; i < Object.keys(markers.rates).length; i++) {
+				let curr = Object.keys(markers.rates)[i];
 
-					if (!data_input.search("USD")) {
-						if (data.list.resources[o].resource.fields.symbol == "USD=X") {
-							currency_changer.all.push("USD:$-1.000000");
-						} else {
-							if (getSymbolFromCurrency(data_input.slice(4)) == undefined) {
-								currency_changer.all.push(
-									data_input.slice(4) +
-										":" +
-										data_input.slice(4) +
-										"-" +
-										data.list.resources[o].resource.fields.price
-								);
-							} else {
-								currency_changer.all.push(
-									data_input.slice(4) +
-										":" +
-										getSymbolFromCurrency(data_input.slice(4)) +
-										"-" +
-										data.list.resources[o].resource.fields.price
-								);
-							}
-						}
-					}
-				}
-			} catch (e) {}
+				currency_changer.all.push(
+					curr +
+						":" +
+						getSymbolFromCurrency(curr) +
+						"-" +
+						Object.values(markers.rates)[i]
+				);
+			}
+			currency_changer.all.push("USD:$-1.0000");
+
 			currency_changer.all.sort();
 			let top = ["USD", "EUR", "RUB", "CHF", "CNY", "CAD", "AUD", "BRL"];
 			let al = currency_changer.all;
