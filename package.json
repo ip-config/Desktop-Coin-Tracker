@@ -19,7 +19,7 @@
   "author": "Escaflowne",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^2.0.5"
+    "electron": "^2.0.9"
   },
   "dependencies": {
     "JSV": "^4.0.2",
