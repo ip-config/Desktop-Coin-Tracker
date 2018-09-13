@@ -42,5 +42,7 @@
             "capital": true,
             "profit": true
         }
-    }
+    },
+    "TV_Live_Column": 3,
+    "TV_Live_Heigth": 400
 }

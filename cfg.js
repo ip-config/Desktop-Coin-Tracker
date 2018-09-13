@@ -497,7 +497,7 @@ function init() {
 				}
 			}
 		}
-
+		
 		for (let i = 0; i < top; i++) {
 			if (
 				coinl.indexOf(all_data.coinl_all[i]) >= 0 ||
@@ -519,24 +519,7 @@ function init() {
 			}
 		}
 
-		if (tempcoinl === []) {
-		} else {
-			for (let p = 0; p < tempcoinl.length; p++) {
-				coinl.push(tempcoinl[p]);
-				coink.push(
-					all_data.coink_all[all_data.coinl_all.indexOf(tempcoinl[p])]
-				);
-				$("#cn").append(
-					"<li id='" +
-						tempcoinl[p] +
-						"cnl' class=list-group-item style=text-align:center!important;>" +
-						tempcoinl[p] +
-						"<button style='position:absolute;right:0;padding:1px 8px!important' type=button class='btn btn-danger' onclick=del('" +
-						tempcoinl[p] +
-						"')>x</button></li>"
-				);
-			}
-		}
+	
 		filler();
 		total = 0;
 
